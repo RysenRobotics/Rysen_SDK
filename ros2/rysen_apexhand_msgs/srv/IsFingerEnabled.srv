@@ -1,0 +1,8 @@
+# Request
+string ip             # 目标机械手的 IP
+uint8 finger_id       # 手指 ID (0:拇指, 1:食指, 2:中指, 3:无名指, 4:小指)
+---
+# Response
+bool success          # 服务调用是否成功（比如 IP 不存在就会返回 false）
+string message        # 错误信息或状态描述
+bool is_enabled       # 该手指是否被使能 (true/false)

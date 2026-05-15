@@ -1,0 +1,7 @@
+# Request
+string ip
+bool enable
+---
+# Response
+bool success
+string message

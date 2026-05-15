@@ -1,0 +1,4 @@
+string ip  # target hand ip
+---
+bool success
+string message

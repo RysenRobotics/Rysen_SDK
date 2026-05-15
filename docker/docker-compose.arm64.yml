@@ -1,0 +1,34 @@
+services:
+  rysen_sdk:
+    platform: linux/arm64
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rysen_sdk.arm64
+    image: rysen_sdk:arm64
+    container_name: rysen_sdk_env
+   # 实时系统关键配置
+    network_mode: host
+    ipc: host
+    privileged: true
+
+    cap_add:
+      - SYS_NICE
+
+    ulimits:
+      rtprio: 99
+      memlock: -1
+  # 挂载源码和构建缓存
+    volumes:
+      - ..:/workspace
+      - build_cache:/workspace/build
+
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+
+    environment:
+      - ROS_DISTRO=humble
+      - TZ=Asia/Shanghai
+      - ROS_DOMAIN_ID=111
+volumes:
+  build_cache:

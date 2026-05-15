@@ -1,0 +1,11 @@
+# Modify the hand's on-device (firmware) network IPv4 address over the current connection.
+# This is NOT the ROS node parameter `device_ip`.
+# ROS node: on success the hand for original_ip is removed from the node; call connect with new_ip.
+#
+# original_ip: which connected hand to command (current session / IP, same role as other services).
+# new_ip: IPv4 address written to the device (SDK uses default netmask/gateway).
+string original_ip
+string new_ip
+---
+bool success
+string message

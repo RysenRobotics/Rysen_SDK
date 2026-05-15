@@ -1,0 +1,2600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="apex_hand_right">
+  <link
+    name="Palm_link_right">
+    <inertial>
+      <origin
+        xyz="-0.00293711171232501 0.000113307755926334 0.0646647515180297"
+        rpy="0 0 0" />
+      <mass
+        value="0.262735816921321" />
+      <inertia
+        ixx="0.000341359715423481"
+        ixy="3.98800624991004E-06"
+        ixz="-5.62269002088485E-06"
+        iyy="0.000220629487963476"
+        iyz="5.26877977739222E-07"
+        izz="0.000163733985955336" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/Palm_link_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/Palm_link_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="f0_link0">
+    <inertial>
+      <origin
+        xyz="0.00743352291727649 -3.46944695195361E-18 0.00039433256296964"
+        rpy="0 0 0" />
+      <mass
+        value="0.0109675846438251" />
+      <inertia
+        ixx="8.52941299389875E-07"
+        ixy="2.869246654996E-22"
+        ixz="3.23200630925961E-08"
+        iyy="7.59561550929961E-07"
+        iyz="-1.17873835505634E-21"
+        izz="6.03762145339431E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_joint0"
+    type="revolute">
+    <origin
+      xyz="0.012998 0.022996 0.0493"
+      rpy="3.1416 0 1.5708" />
+    <parent
+      link="Palm_link_right" />
+    <child
+      link="f0_link0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.3963"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f0_link1">
+    <inertial>
+      <origin
+        xyz="-2.48033218011433E-05 -6.93889390390723E-18 0.00847195900565392"
+        rpy="0 0 0" />
+      <mass
+        value="0.0155120351654751" />
+      <inertia
+        ixx="1.27793414896908E-06"
+        ixy="1.04484009796121E-23"
+        ixz="-2.29771122742565E-09"
+        iyy="1.0808066678358E-06"
+        iyz="1.45030390140814E-22"
+        izz="7.13289303293697E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_joint1"
+    type="revolute">
+    <origin
+      xyz="0.0145 0 0"
+      rpy="-1.5708 0 -1.5708" />
+    <parent
+      link="f0_link0" />
+    <child
+      link="f0_link1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.1745"
+      upper="1.047"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f0_link2">
+    <inertial>
+      <origin
+        xyz="-0.00553826659447157 -0.0253626883037425 -0.000927978595093725"
+        rpy="0 0 0" />
+      <mass
+        value="0.0478768695058164" />
+      <inertia
+        ixx="2.34858768591945E-05"
+        ixy="1.71139425848764E-07"
+        ixz="1.18120809874717E-07"
+        iyy="4.59992053752201E-06"
+        iyz="1.09660366729134E-06"
+        izz="2.07515814865186E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_joint2"
+    type="revolute">
+    <origin
+      xyz="0 0 0.014"
+      rpy="-1.5708 0 1.5708" />
+    <parent
+      link="f0_link1" />
+    <child
+      link="f0_link2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.396"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f0_link2sensor">
+    <inertial>
+      <origin
+        xyz="0.00212818565539009 -0.0240138464842291 -0.00172902178714597"
+        rpy="0 0 0" />
+      <mass
+        value="0.0247850090010987" />
+      <inertia
+        ixx="7.24149048838422E-06"
+        ixy="2.92190670561547E-07"
+        ixz="4.81297107361733E-09"
+        iyy="4.54282190695858E-06"
+        iyz="1.81296221832752E-07"
+        izz="5.24123450120589E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link2sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link2sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_joint2sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f0_link2" />
+    <child
+      link="f0_link2sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f0_link3">
+    <inertial>
+      <origin
+        xyz="0.0149207703549022 -0.00169559683362768 4.88942856025753E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.020327269172061" />
+      <inertia
+        ixx="8.54963082609281E-07"
+        ixy="-9.00633064469603E-09"
+        ixz="5.07245700811026E-09"
+        iyy="3.30601806175647E-06"
+        iyz="-1.41572033747285E-10"
+        izz="2.99491712542649E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_joint3"
+    type="revolute">
+    <origin
+      xyz="0 -0.055 0"
+      rpy="0 0 -1.5708" />
+    <parent
+      link="f0_link2" />
+    <child
+      link="f0_link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="1.396"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f0_link3sensor">
+    <inertial>
+      <origin
+        xyz="0.0149112346471315 0.00419167638110259 9.10902399390533E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.00600800404630824" />
+      <inertia
+        ixx="4.86945505504743E-07"
+        ixy="-9.29186719964698E-09"
+        ixz="-4.97614494435937E-11"
+        iyy="5.3358803765876E-07"
+        iyz="-2.96299529308061E-10"
+        izz="2.6770652973174E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link3sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link3sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_joint3sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f0_link3" />
+    <child
+      link="f0_link3sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f0_link4">
+    <inertial>
+      <origin
+        xyz="0.0105469213884372 -0.00208189200854356 -2.44862662226314E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.0112766286844927" />
+      <inertia
+        ixx="3.05418073165909E-07"
+        ixy="3.01946135481961E-08"
+        ixz="-2.35319548470007E-11"
+        iyy="9.44737655468036E-07"
+        iyz="7.18652919667622E-13"
+        izz="8.49665595657565E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_joint4"
+    type="revolute">
+    <origin
+      xyz="0.03 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f0_link3" />
+    <child
+      link="f0_link4" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="1.396"
+      effort="0"
+       velocity="8.7266" />
+      <mimic joint="f0_joint3" multiplier="1.0" offset="0"/>
+  </joint>
+  <link
+    name="f0_link4sensor">
+    <inertial>
+      <origin
+        xyz="0.0172172467205498 0.00323969853704765 9.52405819596054E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.00568234953311806" />
+      <inertia
+        ixx="3.90567273314637E-07"
+        ixy="8.37135596094151E-08"
+        ixz="-1.5339770313201E-10"
+        iyy="5.97365822168245E-07"
+        iyz="1.13244836803534E-11"
+        izz="3.92075687361001E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link4sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_link4sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_joint4sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f0_link4" />
+    <child
+      link="f0_link4sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f0_pad">
+    <inertial>
+      <origin
+        xyz="-0.016 -0.00960000000000001 -1.52190425531298E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582145E-06" />
+      <inertia
+        ixx="2.67867788925157E-12"
+        ixy="1.83454327543509E-29"
+        ixz="-2.13162495184894E-27"
+        iyy="2.76292091095752E-12"
+        iyz="-1.17996210278953E-27"
+        izz="4.14452782376371E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_pad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_pad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_pad"
+    type="fixed">
+    <origin
+      xyz="0.016 0.00959999999999999 0"
+      rpy="0 0 0" />
+    <parent
+      link="f0_link4" />
+    <child
+      link="f0_pad" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f0_tip">
+    <inertial>
+      <origin
+        xyz="-0.032 6.93889390390723E-18 -1.52190425529979E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582144E-06" />
+      <inertia
+        ixx="2.67867788925157E-12"
+        ixy="9.75963633187042E-29"
+        ixz="1.89180275997528E-27"
+        iyy="2.76292091095752E-12"
+        iyz="-1.57169819171696E-27"
+        izz="4.14452782376371E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_tip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f0_tip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f0_tip"
+    type="fixed">
+    <origin
+      xyz="0.032 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f0_link4" />
+    <child
+      link="f0_tip" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f1_link0">
+    <inertial>
+      <origin
+        xyz="0.00518103249700076 -1.19567339432192E-08 0.000208761354639903"
+        rpy="0 0 0" />
+      <mass
+        value="0.0187941572496829" />
+      <inertia
+        ixx="8.81994778839317E-07"
+        ixy="-2.09676807269184E-13"
+        ixz="2.03275560550625E-08"
+        iyy="2.16564216035535E-06"
+        iyz="-4.12074277020049E-13"
+        izz="1.86406350336843E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_joint0"
+    type="revolute">
+    <origin
+      xyz="0.0069979 0.034496 0.1155"
+      rpy="0 -1.5708 0" />
+    <parent
+      link="Palm_link_right" />
+    <child
+      link="f1_link0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.436"
+      upper="0.436"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f1_link1">
+    <inertial>
+      <origin
+        xyz="0.0185595142141256 -0.00158163913095724 1.17024750306838E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.0314984118835123" />
+      <inertia
+        ixx="1.64726052856679E-06"
+        ixy="1.00463659300395E-07"
+        ixz="-3.4500891812802E-13"
+        iyy="1.02342618660432E-05"
+        iyz="-7.94285646432869E-13"
+        izz="9.80107028685109E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_joint1"
+    type="revolute">
+    <origin
+      xyz="0.016 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="f1_link0" />
+    <child
+      link="f1_link1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="1.5708"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f1_link1sensor">
+    <inertial>
+      <origin
+        xyz="0.0232844732776974 0.00396837485292866 0.000207462744313658"
+        rpy="0 0 0" />
+      <mass
+        value="0.00630609948771224" />
+      <inertia
+        ixx="4.29652935050271E-07"
+        ixy="1.83380895678551E-10"
+        ixz="6.24894074675373E-10"
+        iyy="7.5591726593892E-07"
+        iyz="6.90888806667197E-09"
+        izz="5.62160898057524E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link1sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link1sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_joint1sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f1_link1" />
+    <child
+      link="f1_link1sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f1_link2">
+    <inertial>
+      <origin
+        xyz="0.0129956387814733 -0.00165238485317513 -8.27707775446357E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0133642206044321" />
+      <inertia
+        ixx="4.05592140300392E-07"
+        ixy="-8.352383304901E-09"
+        ixz="-1.88348237678145E-12"
+        iyy="1.48688176212387E-06"
+        iyz="-1.15763528436047E-12"
+        izz="1.33747530863438E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_joint2"
+    type="revolute">
+    <origin
+      xyz="0.045 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f1_link1" />
+    <child
+      link="f1_link2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.0873"
+      upper="1.745"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f1_link2sensor">
+    <inertial>
+      <origin
+        xyz="0.0125636071859947 0.00310495808583111 -5.00862961586857E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.00221573217930461" />
+      <inertia
+        ixx="1.35482424631106E-07"
+        ixy="-6.10235404818965E-10"
+        ixz="-1.12337424859966E-14"
+        iyy="1.37312142462521E-07"
+        iyz="-7.50662675253036E-13"
+        izz="5.42797633396216E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link2sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link2sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_joint2sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f1_link2" />
+    <child
+      link="f1_link2sensor" />
+    <axis
+      xyz="0 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f1_link3">
+    <inertial>
+      <origin
+        xyz="0.00739724500603517 -0.00185106455799869 1.24145051738633E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.00678240464273071" />
+      <inertia
+        ixx="1.52659534197356E-07"
+        ixy="1.13733637713936E-08"
+        ixz="-2.40100991793574E-12"
+        iyy="3.47161684492965E-07"
+        iyz="-3.7901388751517E-13"
+        izz="2.99855649517854E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_joint3"
+    type="revolute">
+    <origin
+      xyz="0.025 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f1_link2" />
+    <child
+      link="f1_link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.0873"
+      upper="1.745"
+      effort="0"
+       velocity="8.7266" />
+    <mimic joint="f1_joint2" multiplier="1.0" offset="0"/>
+  </joint>
+  <link
+    name="f1_link3sensor">
+    <inertial>
+      <origin
+        xyz="0.0160701307759107 0.00240020829469922 -2.88993560589729E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.00343388205100338" />
+      <inertia
+        ixx="1.43220229974495E-07"
+        ixy="2.43691144494629E-08"
+        ixz="5.11426376955835E-10"
+        iyy="2.5325689694206E-07"
+        iyz="-7.43498025616183E-11"
+        izz="1.74551670863421E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link3sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_link3sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_joint3sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f1_link3" />
+    <child
+      link="f1_link3sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f1_pad">
+    <inertial>
+      <origin
+        xyz="-0.016 -0.00789999999999987 -1.52190425530274E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582146E-06" />
+      <inertia
+        ixx="2.67867788925158E-12"
+        ixy="6.71740709568232E-28"
+        ixz="1.42705813487581E-27"
+        iyy="2.76292091095753E-12"
+        iyz="-2.44725750704784E-27"
+        izz="4.14452782376372E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_pad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_pad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_pad"
+    type="fixed">
+    <origin
+      xyz="0.016 0.00789999999999919 0"
+      rpy="0 0 0" />
+    <parent
+      link="f1_link3" />
+    <child
+      link="f1_pad" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f1_tip">
+    <inertial>
+      <origin
+        xyz="-0.028 2.20309881449055E-16 -1.52190425530205E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582146E-06" />
+      <inertia
+        ixx="2.67867788925158E-12"
+        ixy="4.92616348592834E-28"
+        ixz="9.61085877038087E-28"
+        iyy="2.76292091095753E-12"
+        iyz="-3.78948754425724E-27"
+        izz="4.14452782376372E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_tip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f1_tip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f1_tip"
+    type="fixed">
+    <origin
+      xyz="0.028 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f1_link3" />
+    <child
+      link="f1_tip" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f2_link0">
+    <inertial>
+      <origin
+        xyz="0.00518103249700078 -1.19567339466886E-08 0.000208761354639873"
+        rpy="0 0 0" />
+      <mass
+        value="0.0187941572496829" />
+      <inertia
+        ixx="8.81994778839318E-07"
+        ixy="-2.0967680724582E-13"
+        ixz="2.03275560550676E-08"
+        iyy="2.16564216035534E-06"
+        iyz="-4.12074277099598E-13"
+        izz="1.86406350336843E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_joint0"
+    type="revolute">
+    <origin
+      xyz="0.0069979 0.011496 0.1185"
+      rpy="0 -1.5708 0" />
+    <parent
+      link="Palm_link_right" />
+    <child
+      link="f2_link0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.436"
+      upper="0.436"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f2_link1">
+    <inertial>
+      <origin
+        xyz="0.0185595142142048 -0.00158163913101535 1.17025325992171E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.0314984118831186" />
+      <inertia
+        ixx="1.64726052855111E-06"
+        ixy="1.00463659290197E-07"
+        ixz="-3.44997223050891E-13"
+        iyy="1.02342618660188E-05"
+        iyz="-7.94293401313373E-13"
+        izz="9.80107028682878E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_joint1"
+    type="revolute">
+    <origin
+      xyz="0.016 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="f2_link0" />
+    <child
+      link="f2_link1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="1.5708"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f2_link2">
+    <inertial>
+      <origin
+        xyz="0.0129964253312357 -0.00164618700368516 -8.27708053869301E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0133642206044321" />
+      <inertia
+        ixx="4.05600352780851E-07"
+        ixy="-8.86804991632526E-09"
+        ixz="-1.88273043247826E-12"
+        iyy="1.4868735496434E-06"
+        iyz="-1.15853150639331E-12"
+        izz="1.33747530863438E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_joint2"
+    type="revolute">
+    <origin
+      xyz="0.045 0 0"
+      rpy="0 0 -0.0004769" />
+    <parent
+      link="f2_link1" />
+    <child
+      link="f2_link2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.0873"
+      upper="1.745"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f2_link2sensor">
+    <inertial>
+      <origin
+        xyz="0.0125621250089864 0.0031109493431044 -5.00862992315228E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.00221573216118682" />
+      <inertia
+        ixx="1.35483007002669E-07"
+        ixy="-6.11107808393865E-10"
+        ixz="-1.08972842435132E-14"
+        iyy="1.3731155993102E-07"
+        iyz="-7.50665513608441E-13"
+        izz="5.42797631826501E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link2sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link2sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_joint2sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f2_link2" />
+    <child
+      link="f2_link2sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f2_link3">
+    <inertial>
+      <origin
+        xyz="0.00739724500603531 -0.00185106455799864 1.24145052276398E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.00678240464273071" />
+      <inertia
+        ixx="1.52659534197354E-07"
+        ixy="1.13733637713903E-08"
+        ixz="-2.4010099160691E-12"
+        iyy="3.47161684492967E-07"
+        iyz="-3.7901388764751E-13"
+        izz="2.99855649517858E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_joint3"
+    type="revolute">
+    <origin
+      xyz="0.025 1.1923E-05 0"
+      rpy="0 0 0.0004769" />
+    <parent
+      link="f2_link2" />
+    <child
+      link="f2_link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.0873"
+      upper="1.745"
+      effort="0"
+       velocity="8.7266" />
+    <mimic joint="f2_joint2" multiplier="1.0" offset="0"/>
+  </joint>
+  <link
+    name="f2_link3sensor">
+    <inertial>
+      <origin
+        xyz="0.0160701307022448 0.00240020838545619 -2.89021268272925E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.00343388188425332" />
+      <inertia
+        ixx="1.43220223534076E-07"
+        ixy="2.43691137054852E-08"
+        ixz="5.11428580598909E-10"
+        iyy="2.53256890259319E-07"
+        iyz="-7.43517342840693E-11"
+        izz="1.74551669340158E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link3sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link3sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_joint3sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f2_link3" />
+    <child
+      link="f2_link3sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f2_pad">
+    <inertial>
+      <origin
+        xyz="-0.016 -0.00790000000000033 -1.52190425530083E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582145E-06" />
+      <inertia
+        ixx="2.67867788925157E-12"
+        ixy="-1.79831446692213E-27"
+        ixz="-7.80526907262142E-28"
+        iyy="2.76292091095753E-12"
+        iyz="-8.19008807727436E-28"
+        izz="4.14452782376371E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_pad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_pad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_pad"
+    type="fixed">
+    <origin
+      xyz="0.0160000000000002 0.00789999999999927 0"
+      rpy="0 0 0" />
+    <parent
+      link="f2_link3" />
+    <child
+      link="f2_pad" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f2_tip">
+    <inertial>
+      <origin
+        xyz="-0.028 -5.82867087928207E-16 -1.52190425530187E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582146E-06" />
+      <inertia
+        ixx="2.67867788925158E-12"
+        ixy="-1.82421205833913E-27"
+        ixz="6.00919710509385E-28"
+        iyy="2.76292091095753E-12"
+        iyz="-2.98422102377016E-27"
+        izz="4.14452782376372E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_tip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_tip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_tip"
+    type="fixed">
+    <origin
+      xyz="0.0280000000000001 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f2_link3" />
+    <child
+      link="f2_tip" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f2_link1sensor">
+    <inertial>
+      <origin
+        xyz="0.0232844732776971 0.00396837485292879 0.000207462744313663"
+        rpy="0 0 0" />
+      <mass
+        value="0.00630609948771226" />
+      <inertia
+        ixx="4.29652935050271E-07"
+        ixy="1.83380895676374E-10"
+        ixz="6.24894074672421E-10"
+        iyy="7.55917265938922E-07"
+        iyz="6.9088880666725E-09"
+        izz="5.62160898057526E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link1sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f2_link1sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f2_joint1sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f2_link1" />
+    <child
+      link="f2_link1sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f3_link0">
+    <inertial>
+      <origin
+        xyz="0.00518103249700075 -1.19567339484233E-08 0.000208761354639901"
+        rpy="0 0 0" />
+      <mass
+        value="0.0187941572496829" />
+      <inertia
+        ixx="8.81994778839318E-07"
+        ixy="-2.09676807463748E-13"
+        ixz="2.03275560550629E-08"
+        iyy="2.16564216035535E-06"
+        iyz="-4.12074277071738E-13"
+        izz="1.86406350336843E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_joint0"
+    type="revolute">
+    <origin
+      xyz="0.0069979 -0.011503 0.1155"
+      rpy="0 -1.5708 0" />
+    <parent
+      link="Palm_link_right" />
+    <child
+      link="f3_link0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.436"
+      upper="0.436"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f3_link1">
+    <inertial>
+      <origin
+        xyz="0.0185602663924405 -0.0015727878596804 1.16985912086004E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.0314984118828771" />
+      <inertia
+        ixx="1.64716665867265E-06"
+        ixy="9.63684457328809E-08"
+        ixz="-3.42864517009926E-13"
+        iyy="1.02343557358735E-05"
+        iyz="-7.9448311730874E-13"
+        izz="9.80107028681563E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_joint1"
+    type="revolute">
+    <origin
+      xyz="0.016 0 0"
+      rpy="-1.5708 -0.0004769 0" />
+    <parent
+      link="f3_link0" />
+    <child
+      link="f3_link1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="1.5708"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f3_link1sensor">
+    <inertial>
+      <origin
+        xyz="0.0232825780992491 0.00397947884120402 0.000207462739325124"
+        rpy="0 0 0" />
+      <mass
+        value="0.00630609948771224" />
+      <inertia
+        ixx="4.29652834345157E-07"
+        ixy="2.77843316889165E-11"
+        ixz="6.21599161257174E-10"
+        iyy="7.559173666443E-07"
+        iyz="6.90918529495633E-09"
+        izz="5.62160898057257E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link1sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link1sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_link1sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f3_link1" />
+    <child
+      link="f3_link1sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f3_link2">
+    <inertial>
+      <origin
+        xyz="0.0129956387814732 -0.00165238485317514 -8.2770777544653E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0133642206044322" />
+      <inertia
+        ixx="4.05592140300393E-07"
+        ixy="-8.35238330490188E-09"
+        ixz="-1.88348237573273E-12"
+        iyy="1.48688176212387E-06"
+        iyz="-1.15763528404651E-12"
+        izz="1.33747530863438E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_joint2"
+    type="revolute">
+    <origin
+      xyz="0.045 2.1461E-05 0"
+      rpy="0 0 0.0004769" />
+    <parent
+      link="f3_link1" />
+    <child
+      link="f3_link2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.0873"
+      upper="1.745"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f3_link2sensor">
+    <inertial>
+      <origin
+        xyz="0.0125636071859946 0.00310495808583112 -5.00862961587203E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.00221573217930458" />
+      <inertia
+        ixx="1.35482424631105E-07"
+        ixy="-6.10235404819434E-10"
+        ixz="-1.12337426225652E-14"
+        iyy="1.37312142462521E-07"
+        iyz="-7.5066267423175E-13"
+        izz="5.42797633396208E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link2sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link2sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_joint2sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f3_link2" />
+    <child
+      link="f3_link2sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f3_link3">
+    <inertial>
+      <origin
+        xyz="0.00739724500603534 -0.00185106455799871 1.24145051790675E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.00678240464273076" />
+      <inertia
+        ixx="1.52659534197357E-07"
+        ixy="1.13733637713915E-08"
+        ixz="-2.40100991774637E-12"
+        iyy="3.47161684492977E-07"
+        iyz="-3.79013887547423E-13"
+        izz="2.99855649517866E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_joint3"
+    type="revolute">
+    <origin
+      xyz="0.025 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f3_link2" />
+    <child
+      link="f3_link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.0873"
+      upper="1.745"
+      effort="0"
+       velocity="8.7266" />
+    <mimic joint="f3_joint2" multiplier="1.0" offset="0"/>
+  </joint>
+  <link
+    name="f3_link3sensor">
+    <inertial>
+      <origin
+        xyz="0.0160701307759108 0.00240020829469911 -2.88993560599443E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0034338820510035" />
+      <inertia
+        ixx="1.43220229974499E-07"
+        ixy="2.4369114449462E-08"
+        ixz="5.11426376957652E-10"
+        iyy="2.53256896942066E-07"
+        iyz="-7.43498025627171E-11"
+        izz="1.74551670863424E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link3sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_link3sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_joint3sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f3_link3" />
+    <child
+      link="f3_link3sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f3_pad">
+    <inertial>
+      <origin
+        xyz="-0.0159962306453115 -0.00790762955948942 -1.52154901614989E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582145E-06" />
+      <inertia
+        ixx="2.67867790841152E-12"
+        ixy="-4.01757611556362E-17"
+        ixz="1.80506059722486E-23"
+        iyy="2.76292089179786E-12"
+        iyz="6.20667507228861E-19"
+        izz="4.14452782376344E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_pad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_pad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_pad"
+    type="fixed">
+    <origin
+      xyz="0.016 0.0078999999999992 0"
+      rpy="0 0 -0.000476903207335163" />
+    <parent
+      link="f3_link3" />
+    <child
+      link="f3_pad" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f3_tip">
+    <inertial>
+      <origin
+        xyz="-0.0279999968158867 -1.3353296136131E-05 -1.52190365542287E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582144E-06" />
+      <inertia
+        ixx="2.67867790841152E-12"
+        ixy="-4.01757611554102E-17"
+        ixz="1.80488997878562E-23"
+        iyy="2.76292089179785E-12"
+        iyz="6.20667508209149E-19"
+        izz="4.14452782376343E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_tip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f3_tip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f3_tip"
+    type="fixed">
+    <origin
+      xyz="0.028 0 0"
+      rpy="0 0 -0.000476903207335163" />
+    <parent
+      link="f3_link3" />
+    <child
+      link="f3_tip" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f4_link0">
+    <inertial>
+      <origin
+        xyz="0.00518103249700078 -1.1956733957097E-08 0.000208761354639883"
+        rpy="0 0 0" />
+      <mass
+        value="0.0187941572496829" />
+      <inertia
+        ixx="8.81994778839322E-07"
+        ixy="-2.09676806346489E-13"
+        ixz="2.03275560550649E-08"
+        iyy="2.16564216035535E-06"
+        iyz="-4.12074277130513E-13"
+        izz="1.86406350336843E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_joint0"
+    type="revolute">
+    <origin
+      xyz="0.0069979 -0.034504 0.1125"
+      rpy="0 -1.5708 0" />
+    <parent
+      link="Palm_link_right" />
+    <child
+      link="f4_link0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.436"
+      upper="0.436"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f4_link1">
+    <inertial>
+      <origin
+        xyz="0.0185595142142048 -0.00158163913101539 1.17025325888087E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.0314984118831187" />
+      <inertia
+        ixx="1.64726052855112E-06"
+        ixy="1.00463659290219E-07"
+        ixz="-3.44997217903914E-13"
+        iyy="1.02342618660188E-05"
+        iyz="-7.94293401139277E-13"
+        izz="9.8010702868288E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_joint1"
+    type="revolute">
+    <origin
+      xyz="0.016 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="f4_link0" />
+    <child
+      link="f4_link1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="1.5708"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f4_link1sensor">
+    <inertial>
+      <origin
+        xyz="0.0232844732776971 0.00396837485292876 0.000207462744313658"
+        rpy="0 0 0" />
+      <mass
+        value="0.00630609948771232" />
+      <inertia
+        ixx="4.29652935050273E-07"
+        ixy="1.8338089567654E-10"
+        ixz="6.24894074671954E-10"
+        iyy="7.55917265938925E-07"
+        iyz="6.90888806667219E-09"
+        izz="5.62160898057529E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link1sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link1sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_joint1sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f4_link1" />
+    <child
+      link="f4_link1sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f4_link2">
+    <inertial>
+      <origin
+        xyz="0.0129964253312357 -0.00164618700368536 -8.27708053868781E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0133642206044322" />
+      <inertia
+        ixx="4.05600352780852E-07"
+        ixy="-8.86804991630972E-09"
+        ixz="-1.88273043261284E-12"
+        iyy="1.48687354964341E-06"
+        iyz="-1.1585315064629E-12"
+        izz="1.33747530863438E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_joint2"
+    type="revolute">
+    <origin
+      xyz="0.045 0 0"
+      rpy="0 0 -0.0004769" />
+    <parent
+      link="f4_link1" />
+    <child
+      link="f4_link2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.0873"
+      upper="1.745"
+      effort="0"
+       velocity="8.7266" />
+  </joint>
+  <link
+    name="f4_link2sensor">
+    <inertial>
+      <origin
+        xyz="0.0125621250089865 0.00311094934310423 -5.0086299231665E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.00221573216118683" />
+      <inertia
+        ixx="1.35483007002667E-07"
+        ixy="-6.11107808394028E-10"
+        ixz="-1.08972847986401E-14"
+        iyy="1.37311559931019E-07"
+        iyz="-7.50665513469006E-13"
+        izz="5.42797631826503E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link2sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link2sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_link2sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f4_link2" />
+    <child
+      link="f4_link2sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f4_link3">
+    <inertial>
+      <origin
+        xyz="0.00739812694333383 -0.00184753657812547 1.24129203304957E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.00678240464273083" />
+      <inertia
+        ixx="1.52648730449702E-07"
+        ixy="1.12805999222202E-08"
+        ixz="-2.40079735543036E-12"
+        iyy="3.47172488240635E-07"
+        iyz="-3.80161314848168E-13"
+        izz="2.99855649517867E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_joint3"
+    type="revolute">
+    <origin
+      xyz="0.025 1.1923E-05 0"
+      rpy="0 0 0" />
+    <parent
+      link="f4_link2" />
+    <child
+      link="f4_link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.0873"
+      upper="1.745"
+      effort="0"
+       velocity="8.7266" />
+    <mimic joint="f4_joint2" multiplier="1.0" offset="0"/>
+  </joint>
+  <link
+    name="f4_link3sensor">
+    <inertial>
+      <origin
+        xyz="0.0160689842078597 0.00240787200830618 -2.89021612590035E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0034338818842534" />
+      <inertia
+        ixx="1.43197005149602E-07"
+        ixy="2.43166257946655E-08"
+        ixz="5.11463987730899E-10"
+        iyy="2.53280108644021E-07"
+        iyz="-7.41078291509624E-11"
+        izz="1.74551669339939E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link3sensor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_link3sensor.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_joint3sensor"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="f4_link3" />
+    <child
+      link="f4_link3sensor" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f4_pad">
+    <inertial>
+      <origin
+        xyz="-0.016 -0.0079000000000001 -1.52190425529997E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582141E-06" />
+      <inertia
+        ixx="2.67867788925156E-12"
+        ixy="-4.96754391548075E-28"
+        ixz="-6.15220510504059E-28"
+        iyy="2.76292091095751E-12"
+        iyz="9.76652497333542E-28"
+        izz="4.1445278237637E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_pad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_pad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_pad"
+    type="fixed">
+    <origin
+      xyz="0.0159962306453115 0.00790762955265271 0"
+      rpy="0 0 0.000476903207341931" />
+    <parent
+      link="f4_link3" />
+    <child
+      link="f4_pad" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="f4_tip">
+    <inertial>
+      <origin
+        xyz="-0.028 -1.77809156287623E-16 -1.52190425530205E-05"
+        rpy="0 0 0" />
+      <mass
+        value="8.20481262582146E-06" />
+      <inertia
+        ixx="2.67867788925158E-12"
+        ixy="-5.91688445656393E-28"
+        ixz="1.93105376242371E-27"
+        iyy="2.76292091095753E-12"
+        iyz="-2.78549247678555E-28"
+        izz="4.14452782376372E-12" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_tip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.866666666666667 0.890196078431372 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="./meshes/f4_tip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f4_tip"
+    type="fixed">
+    <origin
+      xyz="0.0279999968158867 1.33532892995824E-05 0"
+      rpy="0 0 0.000476903207341931" />
+    <parent
+      link="f4_link3" />
+    <child
+      link="f4_tip" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

@@ -1,0 +1,26 @@
+# Include pre-compiled Python extension modules
+recursive-include lib *_rysen_sdk*.so
+recursive-include lib *_rysen_sdk*.pyd
+recursive-include lib *_rysen_sdk*.dll
+recursive-include lib *_rysen_sdk*.dylib
+
+# Include core SDK shared libraries that bindings depend on
+recursive-include lib librysen*.so
+recursive-include lib librysen*.dll
+recursive-include lib librysen*.dylib
+
+# Include Python SDK files
+include __init__.py
+include rysen_apexhand_sdk.py
+
+# Include documentation
+include README.md
+
+# Exclude build artifacts
+exclude __pycache__
+exclude *.pyc
+exclude *.pyo
+exclude *.egg-info
+exclude build
+exclude dist
+

@@ -1,0 +1,9 @@
+# connect=true: connect the hand at `ip` (creates instance if needed). connect=false: disconnect.
+# Empty `ip` uses the node parameter device_ip.
+bool connect
+string ip
+int32 connection_type
+---
+# Response
+bool success
+string message

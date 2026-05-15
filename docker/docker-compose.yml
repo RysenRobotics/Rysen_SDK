@@ -1,0 +1,22 @@
+services:
+  rysen_sdk:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rysen_sdk
+    image: rysen_sdk:latest
+    container_name: rysen_sdk_env
+    volumes:
+      - ..:/workspace
+      - build_cache:/workspace/build
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+    ports:
+      - "8765:8765"
+    environment:
+      - ROS_DISTRO=humble
+      - TZ=Asia/Shanghai
+      - ROS_DOMAIN_ID=111
+
+volumes:
+  build_cache:

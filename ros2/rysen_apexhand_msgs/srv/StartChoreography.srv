@@ -1,0 +1,17 @@
+# Request (前端发给 ROS 节点的请求)
+
+string ip                    # 目标灵巧手ip地址
+string json_content          # 动作编排的 JSON 纯文本字符串
+float64 playback_rate        # 播放倍速 (默认 1.0)
+bool loop                    # 是否开启循环播放
+bool yoyo                    # 是否开启倒序 (乒乓) 模式
+float64 loop_transition_s    # 循环播放时的首尾过渡时间 (单位: 秒)
+float64 keyframe_hold_s      # 每个关键帧的停留时间 (单位: 秒)
+float64 max_joint_speed_deg_s       #动态关节速率限制 (度/秒)
+float64 start_time             # 希望开始播放的时间戳 (秒)
+
+---
+# Response (ROS 节点返回给前端的结果)
+
+bool success                 # 是否成功解析并启动
+string message               # 成功时的提示，或失败时的报错原因 (如 "JSON格式错误")

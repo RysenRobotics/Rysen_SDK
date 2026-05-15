@@ -1,0 +1,7 @@
+std_msgs/Header header
+uint64 device_error_code
+uint64 thumb_error_code
+uint64 index_error_code
+uint64 middle_error_code
+uint64 ring_error_code
+uint64 little_error_code
