@@ -132,42 +132,20 @@ set_target_properties(${PROJECT_NAME}_node_exe PROPERTIES
   INSTALL_RPATH "$ORIGIN/../rysen_sdk"
 )
 
-# Trajectory generator executable (does not require SDK, only publishes ROS2 messages)
-add_executable(${PROJECT_NAME}_trajectory_generator_exe
-  src/trajectory_generator_main.cpp
-  src/trajectory_generator_node.cpp
+# ==========================================================
+# Test Node (测试节点)
+# ==========================================================
+add_executable(${PROJECT_NAME}_test_node_exe
+  src/apexhand_test_node.cpp
 )
 
-target_include_directories(${PROJECT_NAME}_trajectory_generator_exe
+target_include_directories(${PROJECT_NAME}_test_node_exe
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(${PROJECT_NAME}_trajectory_generator_exe
-  rclcpp
-  sensor_msgs
-)
-
-# ==========================================================
-# Choreography Node (动作编排节点)
-# ==========================================================
-add_executable(${PROJECT_NAME}_choreography_node_exe
-  src/choreography_main.cpp
-  src/choreography_node.cpp
-)
-
-# 引入 thirdparty 目录作为头文件搜索路径
-set(THIRDPARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty")
-
-target_include_directories(${PROJECT_NAME}_choreography_node_exe
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${THIRDPARTY_DIR}>
-    $<INSTALL_INTERFACE:include>
-)
-
-ament_target_dependencies(${PROJECT_NAME}_choreography_node_exe
+ament_target_dependencies(${PROJECT_NAME}_test_node_exe
   rclcpp
   sensor_msgs
   rysen_apexhand_msgs
@@ -177,8 +155,7 @@ ament_target_dependencies(${PROJECT_NAME}_choreography_node_exe
 install(TARGETS
   ${PROJECT_NAME}_node
   ${PROJECT_NAME}_node_exe
-  ${PROJECT_NAME}_trajectory_generator_exe
-  ${PROJECT_NAME}_choreography_node_exe
+  ${PROJECT_NAME}_test_node_exe
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}

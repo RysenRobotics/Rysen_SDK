@@ -29,6 +29,6 @@ services:
     environment:
       - ROS_DISTRO=humble
       - TZ=Asia/Shanghai
-      - ROS_DOMAIN_ID=111
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
 volumes:
   build_cache:

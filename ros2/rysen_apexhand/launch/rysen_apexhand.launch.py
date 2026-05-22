@@ -94,11 +94,6 @@ def generate_launch_description() -> LaunchDescription:
     declare_auto_connect_startup_hands = DeclareLaunchArgument(
         "auto_connect_startup_hands", default_value="true")
 
-    # 动作编排大脑的启动开关参数
-    declare_launch_choreography = DeclareLaunchArgument(
-        "launch_choreography", default_value="false",
-        description="If true, launch the centralized choreography node")
-
     # Optional: start foxglove_bridge so Foxglove Studio can connect (Open Connection → Foxglove WebSocket → ws://host:port)
     declare_launch_foxglove_bridge = DeclareLaunchArgument(
         "launch_foxglove_bridge", default_value="false",
@@ -161,22 +156,6 @@ def generate_launch_description() -> LaunchDescription:
         ],
     )
 
-    # 条件启动的动作编排中枢节点
-    choreography_node = Node(
-        package="rysen_apexhand",
-        executable="rysen_apexhand_choreography_node_exe",
-        name="choreography_node",
-        output="screen",
-        emulate_tty=True,
-        condition=IfCondition(LaunchConfiguration("launch_choreography")),
-        parameters=[
-            {
-                "multi_hand_topic_prefix": LaunchConfiguration("multi_hand_topic_prefix"),
-                "frame_id": LaunchConfiguration("frame_id"),
-            }
-        ],
-    )
-
     foxglove_bridge = IncludeLaunchDescription(
         AnyLaunchDescriptionSource(
             PathJoinSubstitution(
@@ -226,11 +205,7 @@ def generate_launch_description() -> LaunchDescription:
             declare_launch_foxglove_bridge,
             declare_foxglove_bridge_port,
             declare_foxglove_bridge_address,
-            declare_launch_choreography, # 将新参数添加到启动描述列表
             rysen_node,
-            choreography_node,           # 将编排节点添加到启动描述列表
             foxglove_bridge,
         ]
     )
-
-

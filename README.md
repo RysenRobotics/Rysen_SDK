@@ -40,7 +40,7 @@ cd cpp
 mkdir build && cd build
 cmake ..
 make
-./rysen_example
+./bin/rysen_example
 ```
 
 详细说明请参考 [cpp/README.md](cpp/README.md)。
@@ -61,7 +61,23 @@ python example.py
 cd ros2
 colcon build
 source install/setup.bash
+
+启动主控制节点 (驱动层)
 ros2 launch rysen_apexhand rysen_apexhand.launch.py
+
+
+启动测试节点 (应用层)（可选）
+cd ros2
+source install/setup.bash
+
+# 默认同时测试双手 (192.168.0.102 和 192.168.0.103)
+ros2 run rysen_apexhand rysen_apexhand_test_node_exe --ros-args -p test_mode:=3
+
+# 仅测试左手 (192.168.0.102)
+ros2 run rysen_apexhand rysen_apexhand_test_node_exe --ros-args -p test_mode:=1
+
+# 仅测试右手 (192.168.0.103)
+ros2 run rysen_apexhand rysen_apexhand_test_node_exe --ros-args -p test_mode:=2
 ```
 
 **特性**:
@@ -125,12 +141,16 @@ chmod +x install_rysen_deps.sh
 
 ## SDK 文件说明
 
-构建 SDK 后，以下文件会自动复制到示例目录（这些文件不会被 git 跟踪）：
+本项目在根目录下提供了一个统一的 rysen_sdk/ 目录，所有的示例程序均动态链接此处的库文件
 
-- `cpp/rysen_sdk/` - C++ 示例所需的 SDK 头文件和库文件
-- `ros2/rysen_apexhand/rysen_sdk/` - ROS2 包所需的 SDK 文件
+- rysen_sdk/include/ - SDK 的 C++ 头文件
 
-这些文件在构建时自动生成，确保示例程序可以独立运行。
+- rysen_sdk/lib/x86_64/ - 适用于普通 PC/服务器平台的动态链接库
+
+- rysen_sdk/lib/aarch64/ - 适用于树莓派、NVIDIA Jetson 等 ARM 边缘计算平台的动态链接库
+
+智能架构路由：
+在构建 C++ 或 ROS 2 项目时，CMake 脚本会自动识别当前系统的物理架构（uname -m），并智能且无缝地链接对应平台目录下的 librysen_sdk.so。开发者无需手动修改路径。
 
 ## 更多信息
 

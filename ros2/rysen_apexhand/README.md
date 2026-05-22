@@ -11,16 +11,6 @@ source install/setup.bash
 ros2 launch rysen_apexhand rysen_apexhand.launch.py
 ```
 
-## 启动动作编排后端
-```bash
-cd /path/to/rysen_sdk/examples/ros2
-colcon build --packages-select rysen_apexhand_msgs rysen_apexhand
-source install/setup.bash
-ros2 launch rysen_apexhand rysen_apexhand.launch.py launch_foxglove_bridge:=true launch_choreography:=true
-#确保下载好了Foxglove Bridge      若没安装则 sudo apt install ros-humble-foxglove-bridge
-#该脚本启动动作编排ros2后端   然后根据服务接口在Foxglove进行调用
-```
-
 ### 可选：同时启动 Foxglove Bridge
 
 本 launch 可附带启动 `foxglove_bridge`，供 [Foxglove Studio](https://foxglove.dev/) 通过 WebSocket 订阅话题（需本机已安装 `ros-humble-foxglove-bridge` 或对应发行版包）。
