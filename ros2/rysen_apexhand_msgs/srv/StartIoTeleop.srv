@@ -1,0 +1,6 @@
+# IO 外骨骼遥操作（服务名 /rysen/apexhand/start_io_teleop；与 StartTactileCalibration 同构）
+# ip 字段传命令：0/stop=关，1/left=左手，2/right=右手，3/both=双手（非设备 IP）
+string ip
+---
+bool success
+string message

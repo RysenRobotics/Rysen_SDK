@@ -100,19 +100,10 @@ source install/setup.bash
 启动主控制节点 (驱动层)
 ros2 launch rysen_apexhand rysen_apexhand.launch.py
 
-
-启动测试节点 (应用层)（可选）
+启动测试节点 (应用层)（查看ROS接口使用方式主要看rysen_ros_example_node.cpp）
 cd ros2
 source install/setup.bash
-
-# 默认同时测试双手 (192.168.0.102 和 192.168.0.103)
-ros2 run rysen_apexhand rysen_apexhand_test_node_exe --ros-args -p test_mode:=3
-
-# 仅测试左手 (192.168.0.102)
-ros2 run rysen_apexhand rysen_apexhand_test_node_exe --ros-args -p test_mode:=1
-
-# 仅测试右手 (192.168.0.103)
-ros2 run rysen_apexhand rysen_apexhand_test_node_exe --ros-args -p test_mode:=2
+ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
 ```
 
 **特性**:
