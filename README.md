@@ -5,30 +5,65 @@
 ## 目录结构
 
 ```
-examples/
-├── README.md                    # 本说明文件
-├── install_rysen_deps.sh   # 依赖安装脚本
-├── cpp/                         # C++ 示例程序
-│   ├── README.md               # C++ 使用说明
-│   ├── rysen_example.cpp   # C++ 示例代码
-│   ├── CMakeLists.txt          # CMake 构建配置
-│   └── rysen_sdk/           # SDK 文件（构建时自动复制）
-│       ├── include/            # SDK 头文件
-│       └── lib/                # SDK 库文件
-├── python/                      # Python 示例程序
-│   ├── README.md               # Python 使用说明
-│   ├── example.py              # Python 示例代码
-│   ├── rysen_apexhand_sdk.py  # Python 封装
-│   └── setup.py                # Python 安装配置
-├── ros2/                        # ROS2 示例程序
-│   ├── rysen_apexhand_msgs/  # ROS2 消息和服务定义
-│   │   └── README.md
-│   └── rysen_apexhand/     # ROS2 节点实现
-│       └── README.md
-└── docker/                      # Docker 开发环境
-    ├── README.md               # Docker 使用说明
-    ├── Dockerfile.rysen_sdk
-    └── docker-compose.yml
+.
+├── cpp
+│   ├── CMakeLists.txt
+│   ├── README.md
+│   └── rysen_example.cpp
+├── docker
+│   ├── docker-compose.arm64.pi.yml
+│   ├── docker-compose.arm64.yml
+│   ├── docker-compose.yml
+│   ├── Dockerfile.cross_arm64
+│   ├── Dockerfile.rysen_sdk
+│   ├── Dockerfile.rysen_sdk.arm64
+│   └── README.md
+├── install_rysen_deps.sh
+├── python
+│   ├── example.py
+│   ├── __init__.py
+│   ├── MANIFEST.in
+│   ├── README.md
+│   ├── rysen_apexhand_sdk.py
+│   └── setup.py
+├── README.md
+├── ros2
+│   ├── rysen_apexhand
+│   │   ├── CMakeLists.txt
+│   │   ├── include
+│   │   │   └── rysen_apexhand
+│   │   │       └── rysen_apexhand_node.hpp
+│   │   ├── launch
+│   │   │   └── rysen_apexhand.launch.py
+│   │   ├── package.xml
+│   │   ├── README.md
+│   │   ├── src
+│   │   │   ├── apexhand_test_node.cpp
+│   │   │   ├── rysen_apexhand_main.cpp
+│   │   │   └── rysen_apexhand_node.cpp
+│   │   └── thirdparty
+│   │       └── nlohmann
+│   │           └── json.hpp
+│   ├── rysen_apexhand_msgs
+│   │   
+├── rysen_sdk
+│   ├── include
+│   │   ├── rysen_apexhand_data.hpp
+│   │   └── rysen_apexhand_sdk.hpp
+│   └── lib
+│       ├── aarch64
+│       │   ├── librysen_sdk.so -> librysen_sdk.so.1
+│       │   ├── librysen_sdk.so.1 -> librysen_sdk.so.1.1.0
+│       │   ├── librysen_sdk.so.1.1.0
+│       │   └── _rysen_sdk.cpython-310-aarch64-linux-gnu.so
+│       └── x86_64
+│           ├── librysen_sdk.so -> librysen_sdk.so.1
+│           ├── librysen_sdk.so.1 -> librysen_sdk.so.1.1.0
+│           ├── librysen_sdk.so.1.1.0
+│           └── _rysen_sdk.cpython-310-x86_64-linux-gnu.so
+└── urdf
+    ├── apex_hand_left.urdf
+    └── apex_hand_right.urdf
 ```
 
 ## 快速开始
