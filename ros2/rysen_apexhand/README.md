@@ -213,27 +213,6 @@ ros2 launch rysen_apexhand two_apex_hands.launch.py \
   left_hand_ip:=192.168.0.102 \
   right_hand_ip:=192.168.0.103
 
-# 单个轨迹生成器 launch（可直接指定目标 follow 话题）
-ros2 launch rysen_apexhand trajectory_generator.launch.py \
-  move_j_position_follow_command_topic:=/io_teleop/joint_cmd_finger_left \
-  publish_frequency:=20.0 \
-  min_angle_deg:=0.0 \
-  max_angle_deg:=80.0 \
-  period_sec:=2.0 \
-  joint_name:=f0_joint3 \
-  frame_id:=base_link
-
-# 或者不传 topic，默认按目标手自动拼接：
-# <multi_hand_topic_prefix>/ip_<target_hand_ip>/move_j_position_follow_command
-ros2 launch rysen_apexhand trajectory_generator.launch.py \
-  target_hand_ip:=192.168.0.102 \
-  publish_frequency:=20.0 \
-  min_angle_deg:=0.0 \
-  max_angle_deg:=80.0 \
-  period_sec:=2.0 \
-  joint_name:=f0_joint3 \
-  frame_id:=base_link
-
 # launch 改 topic 后缀（发布/订阅都会按 <prefix>/<ip_key>/<suffix> 生效）
 ros2 launch rysen_apexhand rysen_apexhand.launch.py \
   joint_states_topic:=js \
