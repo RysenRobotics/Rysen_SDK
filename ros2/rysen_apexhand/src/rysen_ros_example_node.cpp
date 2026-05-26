@@ -36,6 +36,7 @@
 #include "rysen_apexhand_msgs/msg/hand_tactile_forces.hpp"
 #include "rysen_apexhand_msgs/msg/hardware_errors.hpp"
 #include "rysen_apexhand_msgs/srv/connect.hpp"
+#include "rysen_apexhand_msgs/srv/remove_hand.hpp"
 #include "rysen_apexhand_msgs/srv/move_joint.hpp"
 #include "rysen_apexhand_msgs/srv/set_all_fingers_enable.hpp"
 #include "rysen_apexhand_msgs/srv/set_finger_enabled.hpp"
@@ -460,6 +461,19 @@ void PerformMoveJPositionFollowDemo(const std::string& device_topic_prefix) {
     std::cout << "\n✅ MoveJPositionFollow 演示完成" << std::endl;
 }
 
+bool RemoveHand(const std::string& device_ip) {
+    std::cout << "\n=== 从节点移除设备实例 ===" << std::endl;
+    auto request = std::make_shared<rysen_apexhand_msgs::srv::RemoveHand::Request>();
+    request->ip = device_ip;
+
+    auto response = std::make_shared<rysen_apexhand_msgs::srv::RemoveHand::Response>();
+    if (!CallService<rysen_apexhand_msgs::srv::RemoveHand>("rysen/apexhand/remove_hand", request, response)) {
+        return false;
+    }
+    std::cout << (response->success ? "✅ 移除成功" : "❌ 移除失败") << std::endl;
+    return response->success;
+}
+
 /**
  * @brief Main function / 主函数
  */
@@ -480,7 +494,9 @@ int main(int argc, char* argv[]) {
     });
 
     std::string device_ip = DEFAULT_DEVICE_IP;
-    std::string device_topic_prefix = "rysen/apexhand/ip_192_168_0_102";  // Default topic prefix
+    std::string raw_topic_prefix = "rysen/apexhand/ip_" + device_ip;
+    std::replace(raw_topic_prefix.begin(), raw_topic_prefix.end(), '.', '_');
+    std::string device_topic_prefix = raw_topic_prefix; // Default topic prefix
 
     // Parse command line arguments / 解析命令行参数
     std::cout << "\n=== ROS2 ApexHand 客户端示例节点 ===" << std::endl;
@@ -584,6 +600,8 @@ int main(int argc, char* argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     DisconnectHand(device_ip);
+
+    RemoveHand(device_ip);
 
     std::cout << "\n=== 进程结束 ===" << std::endl;
 
