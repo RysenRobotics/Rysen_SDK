@@ -17,8 +17,22 @@ import sys
 import glob
 import ctypes
 
+import platform
+
 _CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-_LIB_DIR = os.path.join(_CURRENT_DIR, "lib")
+_ROOT_DIR = os.path.abspath(os.path.join(_CURRENT_DIR, ".."))
+
+_ARCH = platform.machine()
+if _ARCH == 'x86_64':
+    _LIB_DIR = os.path.join(_ROOT_DIR, "rysen_sdk", "lib", "x86_64")
+elif _ARCH in ['aarch64', 'arm64']:
+    _LIB_DIR = os.path.join(_ROOT_DIR, "rysen_sdk", "lib", "aarch64")
+else:
+    raise RuntimeError(f"Unsupported architecture: {_ARCH}")
+
+# 把库所在的目录强行插到 Python 搜索路径的最前面
+if _LIB_DIR not in sys.path:
+    sys.path.insert(0, _LIB_DIR)
 
 # Ensure the native library directory is discoverable by Python
 if os.path.isdir(_LIB_DIR) and _LIB_DIR not in sys.path:
@@ -1078,4 +1092,3 @@ __all__ = sorted(
         'create_move_j_position_follow_param',
     }
 )
-

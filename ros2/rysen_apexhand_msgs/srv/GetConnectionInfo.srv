@@ -3,3 +3,4 @@ string[] ips
 bool[] connected
 string[] device_ips
 string[] hand_sides
+string[] hardware_uids

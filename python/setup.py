@@ -19,6 +19,7 @@ found in the LICENSE file.
 from setuptools import setup
 import os
 import shutil
+import sys  
 
 # Get the directory containing this file (python/)
 here = os.path.abspath(os.path.dirname(__file__))
@@ -26,12 +27,18 @@ here = os.path.abspath(os.path.dirname(__file__))
 sdk_lib_src = os.path.abspath(os.path.join(here, "..", "rysen_sdk", "lib"))
 local_lib_dst = os.path.join(here, "lib")
 
-# 如果发现上一级有统一的 SDK 库，就自动拷贝过来用于打包
-if os.path.exists(sdk_lib_src):
-    print(f"📦 正在从统一 SDK 目录同步动态库用于打包...")
+# 检查当前执行的命令是否是为了打包发布 (bdist_wheel) 或构建源码包 (sdist)
+# 如果是 pip install -e .，sys.argv 里面会有 'develop' 或 'egg_info'
+is_packaging = any(arg in sys.argv for arg in ['bdist_wheel', 'sdist'])
+
+# 仅在真实打包时，且源库存在时，才进行拷贝
+if is_packaging and os.path.exists(sdk_lib_src):
+    print(f"📦 打包模式：正在从统一 SDK 目录同步动态库用于构建 Wheel 包...")
     if os.path.exists(local_lib_dst):
         shutil.rmtree(local_lib_dst) # 清理旧的
     shutil.copytree(sdk_lib_src, local_lib_dst) # 拷贝新的
+else:
+    print(f"🔧 开发/元数据模式：跳过同步动态库...")
 
 # Read version from VERSION file (single source of truth), fallback to __init__.py, then default
 version = "1.2.0"  # Default fallback version (updated by update_version.sh)
