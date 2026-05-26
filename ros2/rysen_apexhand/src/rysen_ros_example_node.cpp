@@ -14,6 +14,9 @@
  *
  * Copyright (c) 2024-2026, Rysen Robotics (Shenzhen) Co. Ltd.
  * All rights reserved.
+ *
+ * Use of this source code is governed by a BSD 3-Clause license that can be
+ * found in the LICENSE file.
  */
 
 #include <signal.h>

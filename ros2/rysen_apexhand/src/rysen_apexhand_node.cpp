@@ -5,11 +5,8 @@
  * Copyright (c) 2024-2026, Rysen Robotics (Shenzhen) Co. Ltd.
  * All rights reserved.
  *
- * This file is part of the proprietary rysen_sdk software development kit (SDK)
- * provided by Rysen Robotics (Shenzhen) Co. Ltd.
- * Use, reproduction, modification, distribution, or disclosure of this file,
- * in whole or in part, is strictly prohibited without prior written permission
- * from Rysen Robotics (Shenzhen) Co. Ltd.
+ * Use of this source code is governed by a BSD 3-Clause license that can be
+ * found in the LICENSE file.
  */
 
 #include "rysen_apexhand/rysen_apexhand_node.hpp"

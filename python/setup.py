@@ -12,11 +12,8 @@ Usage:
 Copyright (c) 2024-2026, Rysen Robotics (Shenzhen) Co. Ltd.
 All rights reserved.
 
-This file is part of the proprietary rysen_sdk software development kit (SDK)
-provided by Rysen Robotics (Shenzhen) Co. Ltd.
-Use, reproduction, modification, distribution, or disclosure of this file,
-in whole or in part, is strictly prohibited without prior written permission
-from Rysen Robotics (Shenzhen) Co. Ltd.
+Use of this source code is governed by a BSD 3-Clause license that can be
+found in the LICENSE file.
 """
 
 from setuptools import setup
@@ -37,7 +34,7 @@ if os.path.exists(sdk_lib_src):
     shutil.copytree(sdk_lib_src, local_lib_dst) # 拷贝新的
 
 # Read version from VERSION file (single source of truth), fallback to __init__.py, then default
-version = "1.0.1"  # Default fallback version (updated by update_version.sh)
+version = "1.2.0"  # Default fallback version (updated by update_version.sh)
 try:
     # First try to read from VERSION file (project root)
     version_file = os.path.join(here, "..", "..", "VERSION")
