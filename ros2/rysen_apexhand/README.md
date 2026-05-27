@@ -1,95 +1,95 @@
-# Rysen ApexHand ROS2 节点
+# Rysen ApexHand ROS2 Node
 
-支持多手实例管理：每个 `ip` 对应一个独立 SDK 实例，并发布独立状态话题。
+Supports multi-hand instance management: each `ip` corresponds to an independent SDK instance and publishes independent state topics.
 
-## 快速开始
+## Quick Start
 
 ```bash
-cd /path/to/rysen_sdk/examples/ros2
-colcon build --packages-select rysen_apexhand_msgs rysen_apexhand
+cd ros2/
+colcon build
 source install/setup.bash
 ros2 launch rysen_apexhand rysen_apexhand.launch.py
 ```
 
-### 可选：同时启动 Foxglove Bridge
+### Optional: Launch Foxglove Bridge Simultaneously
 
-本 launch 可附带启动 `foxglove_bridge`，供 [Foxglove Studio](https://foxglove.dev/) 通过 WebSocket 订阅话题（需本机已安装 `ros-humble-foxglove-bridge` 或对应发行版包）。
+This launch file can optionally start the `foxglove_bridge` to allow [Foxglove Studio](https://foxglove.dev/) to subscribe to topics via WebSocket (requires `ros-humble-foxglove-bridge` or the corresponding distribution package installed locally).
 
 ```bash
-# 安装（Ubuntu / ROS2 Humble 示例）
+# Installation (Ubuntu / ROS2 Humble example)
 sudo apt install ros-humble-foxglove-bridge
 
-# 与节点同时启动 bridge（默认端口 8765）
+# Launch the bridge with the node (default port 8765)
 ros2 launch rysen_apexhand rysen_apexhand.launch.py launch_foxglove_bridge:=true
 
-# 自定义端口
+# Custom port
 ros2 launch rysen_apexhand rysen_apexhand.launch.py \
   launch_foxglove_bridge:=true \
   foxglove_bridge_port:=8765 \
   foxglove_bridge_address:=0.0.0.0
 ```
 
-在 Foxglove Studio 中打开 **Open connection → Foxglove WebSocket**，填写 `ws://<本机IP>:8765` 即可连接。
+In Foxglove Studio, open **Open connection → Foxglove WebSocket** and fill in `ws://<Local IP>:8765` to connect.
 
-## 多手模型
+## Multi-Hand Model
 
-- 对每个目标 IP 调用 `connect`（`connect: true`）会创建并连接对应的 `HandInstance`（独立 SDK 实例）；`connect: false` 或 `remove_hand` 可释放。
-- 大多数服务请求都包含 `ip` 字段，通过 `ip` 路由到目标手。
-- 每只手独立发布状态话题，避免数据混淆。
+- Calling `connect` (`connect: true`) for each target IP creates and connects the corresponding `HandInstance` (independent SDK instance); `connect: false` or `remove_hand` can release it.
+- Most service requests include an `ip` field, which routes to the target hand via `ip`.
+- Each hand publishes state topics independently to avoid data confusion.
 
-`ip_key` 规则：把 IP 中 `.` 替换为 `_`，并加前缀 `ip_`。例如 `192.168.0.102 -> ip_192_168_0_102`。
+`ip_key` rule: Replace `.` in the IP with `_` and add the prefix `ip_`. For example, `192.168.0.102 -> ip_192_168_0_102`.
 
-## 话题
+## Topics
 
-### 发布（每手独立）
+### Published (Per Hand)
 
-| 话题 | 类型 | 说明 |
+| Topic | Type | Description |
 |---|---|---|
-| `rysen/apexhand/<ip_key>/joint_states` | `sensor_msgs/msg/JointState` | 关节状态 |
-| `rysen/apexhand/<ip_key>/motor_states` | `rysen_apexhand_msgs/msg/MotorState` | 电机状态 |
-| `rysen/apexhand/<ip_key>/hand_tactile_forces` | `rysen_apexhand_msgs/msg/HandTactileForces` | 触觉数据 |
-| `rysen/apexhand/<ip_key>/hardware_errors` | `rysen_apexhand_msgs/msg/HardwareErrors` | 硬件错误事件 |
+| `rysen/apexhand/<ip_key>/joint_states` | `sensor_msgs/msg/JointState` | Joint states |
+| `rysen/apexhand/<ip_key>/motor_states` | `rysen_apexhand_msgs/msg/MotorState` | Motor states |
+| `rysen/apexhand/<ip_key>/hand_tactile_forces` | `rysen_apexhand_msgs/msg/HandTactileForces` | Tactile data |
+| `rysen/apexhand/<ip_key>/hardware_errors` | `rysen_apexhand_msgs/msg/HardwareErrors` | Hardware error events |
 
-### 订阅（每手独立）
+### Subscribed (Per Hand)
 
-| 话题 | 类型 | 说明 |
+| Topic | Type | Description |
 |---|---|---|
-| `rysen/apexhand/<ip_key>/move_j_position_follow_command` | `sensor_msgs/msg/JointState` | 跟随控制输入（每手独立 owner） |
+| `rysen/apexhand/<ip_key>/move_j_position_follow_command` | `sensor_msgs/msg/JointState` | Follow control input (independent owner per hand) |
 
-## 服务
+## Services
 
-| 服务 | 类型 | 说明 |
+| Service | Type | Description |
 |---|---|---|
-| `rysen/apexhand/remove_hand` | `rysen_apexhand_msgs/srv/RemoveHand` | 移除手实例并释放连接 |
-| `rysen/apexhand/connect` | `rysen_apexhand_msgs/srv/Connect` | 按 `ip` 连接/断开（多手时对每个 IP 各调用一次 `connect: true`） |
-| `rysen/apexhand/move_joint` | `rysen_apexhand_msgs/srv/MoveJoint` | 阻塞式关节控制 |
-| `rysen/apexhand/set_all_fingers` | `rysen_apexhand_msgs/srv/SetAllFingersEnable` | 全部手指使能/禁用 |
-| `rysen/apexhand/set_finger_enabled` | `rysen_apexhand_msgs/srv/SetFingerEnabled` | 指定手指使能/禁用 |
-| `rysen/apexhand/set_max_joint_speed` | `rysen_apexhand_msgs/srv/SetMaxJointSpeed` | 关节速度限幅 set/get |
-| `rysen/apexhand/set_max_joint_accel` | `rysen_apexhand_msgs/srv/SetMaxJointAccel` | 关节加速度限幅 set/get |
-| `rysen/apexhand/set_max_finger_torque` | `rysen_apexhand_msgs/srv/SetMaxFingerTorque` | 手指扭矩限幅 set/get |
-| `rysen/apexhand/set_device_ip_address` | `rysen_apexhand_msgs/srv/SetDeviceIPAddress` | 修改设备端（固件）IP；成功后从节点移除该手实例，需用 `new_ip` 再 `connect` |
-| `rysen/apexhand/start_tactile_calibration` | `rysen_apexhand_msgs/srv/StartTactileCalibration` | 开始触觉标定 |
-| `rysen/apexhand/clear_tactile_calibration` | `rysen_apexhand_msgs/srv/ClearTactileCalibration` | 清空触觉标定 |
-| `rysen/apexhand/clean_faults` | `rysen_apexhand_msgs/srv/CleanFaults` | 清故障 |
-| `rysen/apexhand/get_connection_info` | `rysen_apexhand_msgs/srv/GetConnectionInfo` | 查询当前所有已添加手的连接信息 |
-| `rysen/apexhand/get_version_info` | `rysen_apexhand_msgs/srv/GetVersionInfo` | 查询 SDK/手/触觉版本 |
+| `rysen/apexhand/remove_hand` | `rysen_apexhand_msgs/srv/RemoveHand` | Remove hand instance and release connection |
+| `rysen/apexhand/connect` | `rysen_apexhand_msgs/srv/Connect` | Connect/disconnect by `ip` (call `connect: true` once for each IP in multi-hand scenario) |
+| `rysen/apexhand/move_joint` | `rysen_apexhand_msgs/srv/MoveJoint` | Blocking joint control |
+| `rysen/apexhand/set_all_fingers` | `rysen_apexhand_msgs/srv/SetAllFingersEnable` | Enable/disable all fingers |
+| `rysen/apexhand/set_finger_enabled` | `rysen_apexhand_msgs/srv/SetFingerEnabled` | Enable/disable specified fingers |
+| `rysen/apexhand/set_max_joint_speed` | `rysen_apexhand_msgs/srv/SetMaxJointSpeed` | Joint speed limit set/get |
+| `rysen/apexhand/set_max_joint_accel` | `rysen_apexhand_msgs/srv/SetMaxJointAccel` | Joint acceleration limit set/get |
+| `rysen/apexhand/set_max_finger_torque` | `rysen_apexhand_msgs/srv/SetMaxFingerTorque` | Finger torque limit set/get |
+| `rysen/apexhand/set_device_ip_address` | `rysen_apexhand_msgs/srv/SetDeviceIPAddress` | Modify the device-side (firmware) IP; after success, remove the hand instance from the node and reconnect with `new_ip` |
+| `rysen/apexhand/start_tactile_calibration` | `rysen_apexhand_msgs/srv/StartTactileCalibration` | Start tactile calibration |
+| `rysen/apexhand/clear_tactile_calibration` | `rysen_apexhand_msgs/srv/ClearTactileCalibration` | Clear tactile calibration |
+| `rysen/apexhand/clean_faults` | `rysen_apexhand_msgs/srv/CleanFaults` | Clear faults |
+| `rysen/apexhand/get_connection_info` | `rysen_apexhand_msgs/srv/GetConnectionInfo` | Query connection information of all added hands |
+| `rysen/apexhand/get_version_info` | `rysen_apexhand_msgs/srv/GetVersionInfo` | Query SDK/hand/tactile version |
 
-## 服务调用示例（全量）
+## Service Call Examples (Full List)
 
-> 下面按默认服务名给出每一个服务的可执行示例。  
-> 示例中统一使用 `192.168.0.102` 作为目标手 IP。
+> Below are executable examples for each service using the default service names.  
+> `192.168.0.102` is used as the target hand IP in all examples.
 
 ```bash
-# 1) Connect.srv - connect=true 连接（多手时对每个 IP 调用一次）
+# 1) Connect.srv - connect=true to connect (call once per IP in multi-hand scenario)
 ros2 service call /rysen/apexhand/connect rysen_apexhand_msgs/srv/Connect \
   "{connect: true, ip: '192.168.0.102', connection_type: 1}"
 
-# 2) Connect.srv - connect=false 断开
+# 2) Connect.srv - connect=false to disconnect
 ros2 service call /rysen/apexhand/connect rysen_apexhand_msgs/srv/Connect \
   "{connect: false, ip: '192.168.0.102', connection_type: 1}"
 
-# 3) RemoveHand.srv（从节点移除该 IP 的实例）
+# 3) RemoveHand.srv (remove the instance of this IP from the node)
 ros2 service call /rysen/apexhand/remove_hand rysen_apexhand_msgs/srv/RemoveHand \
   "{ip: '192.168.0.102'}"
 
@@ -129,7 +129,7 @@ ros2 service call /rysen/apexhand/set_max_finger_torque rysen_apexhand_msgs/srv/
 ros2 service call /rysen/apexhand/set_max_finger_torque rysen_apexhand_msgs/srv/SetMaxFingerTorque \
   "{ip: '192.168.0.102', get_only: true, finger_ids: [0,1], max_torques: []}"
 
-# 13) SetDeviceIPAddress.srv — 修改设备硬件 IP；成功后释放该 original_ip 对应的手，需用 new_ip 再 connect
+# 13) SetDeviceIPAddress.srv — Modify device hardware IP; after success, release the hand corresponding to original_ip and reconnect with new_ip
 ros2 service call /rysen/apexhand/set_device_ip_address rysen_apexhand_msgs/srv/SetDeviceIPAddress \
   "{original_ip: '192.168.0.102', new_ip: '192.168.0.103'}"
 
@@ -145,60 +145,60 @@ ros2 service call /rysen/apexhand/clear_tactile_calibration rysen_apexhand_msgs/
 ros2 service call /rysen/apexhand/clean_faults rysen_apexhand_msgs/srv/CleanFaults \
   "{ip: '192.168.0.102'}"
 
-# 17) GetConnectionInfo.srv（返回所有已添加手）
+# 17) GetConnectionInfo.srv (returns all added hands)
 ros2 service call /rysen/apexhand/get_connection_info rysen_apexhand_msgs/srv/GetConnectionInfo "{}"
 
-# 18) GetVersionInfo.srv（指定某一只手）
+# 18) GetVersionInfo.srv (specify a single hand)
 ros2 service call /rysen/apexhand/get_version_info rysen_apexhand_msgs/srv/GetVersionInfo \
   "{ip: '192.168.0.102'}"
 ```
 
-## 主要参数
+## Key Parameters
 
-| 参数 | 默认值 | 说明 |
+| Parameter | Default Value | Description |
 |---|---|---|
-| `device_ip` | `192.168.0.102` | 默认手 IP（`ip` 为空时使用） |
-| `connection_type` | `1` | 默认连接类型 |
-| `auto_connect` | `false` | 启动时自动连接，并自动使能自动连接到的所有手 |
-| `auto_enable_on_connect` | `false` | 保留兼容参数（当前自动连接路径默认已自动使能） |
-| `startup_hand_ips_csv` | `""` | 启动时自动添加并连接的多手 IP 列表（逗号分隔） |
-| `auto_connect_startup_hands` | `true` | 是否自动连接 `startup_hand_ips_csv` 中的手 |
-| `multi_hand_topic_prefix` | `rysen/apexhand` | 多手状态话题前缀 |
-| `per_hand_topic_prefixes_csv` | `""` | 按手覆盖前缀，格式：`ip=prefix;ip=prefix` |
-| `per_hand_follow_topics_csv` | `""` | 按手覆盖 follow 订阅话题，格式：`ip=topic;ip=topic` |
-| `joint_states_topic` | `joint_states` | 关节状态话题后缀（可通过 launch 改名） |
-| `motor_states_topic` | `motor_states` | 电机状态话题后缀（可通过 launch 改名） |
-| `tactile_image_topic` | `hand_tactile_forces` | 触觉话题后缀（可通过 launch 改名） |
-| `hardware_errors_topic` | `hardware_errors` | 硬件错误话题后缀（可通过 launch 改名） |
-| `move_j_position_follow_command_topic` | `move_j_position_follow_command` | follow 订阅话题后缀（可通过 launch 改名） |
-| `joint_states_pub_freq` | `100` | 关节状态频率 |
-| `motor_states_pub_freq` | `100` | 电机状态频率 |
-| `tactile_image_pub_freq` | `100` | 触觉频率 |
-| `qos_depth` | `10` | 话题 QoS 深度 |
-| `publish_qos_reliable` | `true` | 发布可靠性 |
-| `subscribe_qos_reliable` | `false` | 订阅可靠性 |
+| `device_ip` | `192.168.0.102` | Default hand IP (used when `ip` is empty) |
+| `connection_type` | `1` | Default connection type |
+| `auto_connect` | `false` | Automatically connect on startup, and automatically enable all hands connected via auto-connect |
+| `auto_enable_on_connect` | `false` | Reserved compatibility parameter (auto-enable is already default in the current auto-connect path) |
+| `startup_hand_ips_csv` | `""` | List of multi-hand IPs to automatically add and connect on startup (comma-separated) |
+| `auto_connect_startup_hands` | `true` | Whether to automatically connect hands in `startup_hand_ips_csv` |
+| `multi_hand_topic_prefix` | `rysen/apexhand` | Multi-hand state topic prefix |
+| `per_hand_topic_prefixes_csv` | `""` | Override prefix per hand, format: `ip=prefix;ip=prefix` |
+| `per_hand_follow_topics_csv` | `""` | Override follow subscription topic per hand, format: `ip=topic;ip=topic` |
+| `joint_states_topic` | `joint_states` | Joint state topic suffix (can be renamed via launch) |
+| `motor_states_topic` | `motor_states` | Motor state topic suffix (can be renamed via launch) |
+| `tactile_image_topic` | `hand_tactile_forces` | Tactile topic suffix (can be renamed via launch) |
+| `hardware_errors_topic` | `hardware_errors` | Hardware error topic suffix (can be renamed via launch) |
+| `move_j_position_follow_command_topic` | `move_j_position_follow_command` | Follow subscription topic suffix (can be renamed via launch) |
+| `joint_states_pub_freq` | `100` | Joint state publishing frequency |
+| `motor_states_pub_freq` | `100` | Motor state publishing frequency |
+| `tactile_image_pub_freq` | `100` | Tactile data publishing frequency |
+| `qos_depth` | `10` | Topic QoS depth |
+| `publish_qos_reliable` | `true` | Publish reliability |
+| `subscribe_qos_reliable` | `false` | Subscribe reliability |
 
-## 相关文档
+## Related Documents
 
-- 消息与服务定义：`../rysen_apexhand_msgs/README.md`
+- Message and service definitions: `../rysen_apexhand_msgs/README.md`
 
-> 说明：默认手（`device_ip`）不允许通过 `RemoveHand` 移除。
+> Note: The default hand (`device_ip`) cannot be removed via `RemoveHand`.
 
 ```bash
-# launch 启动多手（自动连接）
+# Launch multi-hand (auto-connect)
 ros2 launch rysen_apexhand rysen_apexhand.launch.py \
   auto_connect:=true \
   device_ip:=192.168.0.102 \
   startup_hand_ips_csv:="192.168.0.103,192.168.0.104"
 
-# 每只手不同前缀（同一个 launch）
+# Different prefixes for each hand (same launch)
 ros2 launch rysen_apexhand rysen_apexhand.launch.py \
   auto_connect:=true \
   device_ip:=192.168.0.102 \
   startup_hand_ips_csv:="192.168.0.103" \
   per_hand_topic_prefixes_csv:="192.168.0.102=/handA;192.168.0.103=/handB"
 
-# 双手专用 launch（左右手 follow 话题独立）
+# Dual-hand dedicated launch (independent follow topics for left/right hands)
 ros2 launch rysen_apexhand two_apex_hands.launch.py \
   left_hand_ip:=192.168.0.102 \
   right_hand_ip:=192.168.0.103 \
@@ -207,13 +207,13 @@ ros2 launch rysen_apexhand two_apex_hands.launch.py \
   subscribe_qos_reliable:=false \
   publish_qos_reliable:=true
 
-# 双手专用 launch 默认行为与 rysen_apexhand.launch.py 一致
-# （不传 left/right ns 和 left/right follow topic 时，仍是默认多手命名）
+# The default behavior of the dual-hand dedicated launch is consistent with rysen_apexhand.launch.py
+# (when left/right ns and left/right follow topics are not passed, the default multi-hand naming is still used)
 ros2 launch rysen_apexhand two_apex_hands.launch.py \
   left_hand_ip:=192.168.0.102 \
   right_hand_ip:=192.168.0.103
 
-# launch 改 topic 后缀（发布/订阅都会按 <prefix>/<ip_key>/<suffix> 生效）
+# Launch to modify topic suffixes (both publishing and subscribing take effect as <prefix>/<ip_key>/<suffix>)
 ros2 launch rysen_apexhand rysen_apexhand.launch.py \
   joint_states_topic:=js \
   motor_states_topic:=ms \

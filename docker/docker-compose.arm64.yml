@@ -5,7 +5,7 @@ services:
       context: ..
       dockerfile: docker/Dockerfile.rysen_sdk.arm64
     image: rysen_sdk:arm64
-    container_name: rysen_sdk_env
+    container_name: rysen_sdk_arm64_env
    # 实时系统关键配置
     network_mode: host
     ipc: host
