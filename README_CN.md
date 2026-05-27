@@ -193,3 +193,6 @@ chmod +x install_rysen_deps.sh
 - **Python API 文档**: 参考 [python/README.md](python/README.md)
 - **ROS2 API 文档**: 参考 [ros2/rysen_apexhand/README.md](ros2/rysen_apexhand/README.md)
 - **Docker 环境**: 参考 [docker/README.md](docker/README.md)
+
+## 联系我们
+如果您有任何疑问，可以通过 support@rysen.com 联系我们
