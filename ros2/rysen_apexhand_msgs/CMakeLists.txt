@@ -32,6 +32,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/SetMaxJointAccel.srv"
   "srv/SetMaxFingerTorque.srv"
   "srv/StartTactileCalibration.srv"
+  "srv/StartIoTeleop.srv"
   "srv/ClearTactileCalibration.srv"
   "srv/CleanFaults.srv"
   "srv/GetConnectionInfo.srv"

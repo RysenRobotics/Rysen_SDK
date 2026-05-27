@@ -133,19 +133,19 @@ set_target_properties(${PROJECT_NAME}_node_exe PROPERTIES
 )
 
 # ==========================================================
-# Test Node (测试节点)
+# Example Node (接口示例节点)
 # ==========================================================
-add_executable(${PROJECT_NAME}_test_node_exe
-  src/apexhand_test_node.cpp
+add_executable(${PROJECT_NAME}_ros_example_node_exe
+  src/rysen_ros_example_node.cpp
 )
 
-target_include_directories(${PROJECT_NAME}_test_node_exe
+target_include_directories(${PROJECT_NAME}_ros_example_node_exe
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(${PROJECT_NAME}_test_node_exe
+ament_target_dependencies(${PROJECT_NAME}_ros_example_node_exe
   rclcpp
   sensor_msgs
   rysen_apexhand_msgs
@@ -155,7 +155,7 @@ ament_target_dependencies(${PROJECT_NAME}_test_node_exe
 install(TARGETS
   ${PROJECT_NAME}_node
   ${PROJECT_NAME}_node_exe
-  ${PROJECT_NAME}_test_node_exe
+  ${PROJECT_NAME}_ros_example_node_exe
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}

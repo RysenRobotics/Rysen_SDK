@@ -1,37 +1,34 @@
-# Rysen ApexHand SDK Python 示例
+# Rysen ApexHand SDK Python Examples
 
-本目录提供 Rysen ApexHand SDK 的 Python 封装和示例程序。
+This directory provides the Python wrapper and example programs for the Rysen ApexHand SDK.
 
-## 目录结构
+## Directory Structure
 
 ```
 python/
-├── README.md                    # 本说明文件
-├── example.py                   # Python 使用示例
-├── rysen_apexhand_sdk.py   # Python 封装模块
-├── __init__.py                  # Python 包初始化文件
-├── setup.py                     # Python 安装配置
-├── MANIFEST.in                  # 打包清单文件
-└── lib/                         # SDK 库文件目录（构建时自动生成）
-    ├── librysen_sdk.so*    # SDK 核心库
-    └── _rysen_sdk*.so      # Python 绑定库
+├── example.py
+├── __init__.py
+├── MANIFEST.in
+├── README.md
+├── rysen_apexhand_sdk.py
+└── setup.py
 ```
 
-## 安装
+## Installation
 
-### 前置要求
+### Prerequisites
 
-1. **Python 版本**: Python 3.10
-2. **系统依赖库**:
+1. **Python Version**: Python 3.10
+2. **System Dependencies**:
 
-   **快速安装（推荐）**:
+   **Quick Installation (Recommended)**:
    ```bash
-   # 在 examples 目录下
+   # In the root directory of the repository
    chmod +x install_rysen_deps.sh
    ./install_rysen_deps.sh
    ```
 
-   **手动安装运行时库**:
+   **Manual Installation of Runtime Libraries**:
    ```bash
    sudo apt-get update
    sudo apt-get install -y \
@@ -42,165 +39,166 @@ python/
    sudo ldconfig
    ```
 
-### 安装步骤
+### Installation Steps
 
-1. **进入 Python 目录**:
+1. **Navigate to the Python directory**:
    ```bash
-   cd examples/python
+   cd python/
    ```
 
-2. **安装 Python 包**:
+2. **Install the Python package**:
    ```bash
    pip install -e .
    ```
    
-   或者使用 `pip3`:
+   Or use `pip3`:
    ```bash
    pip3 install -e .
    ```
 
-   安装完成后，`rysen_apexhand_sdk` 模块即可在 Python 中使用。
+   After installation, the `rysen_apexhand_sdk` module can be used in Python.
 
-## 使用示例
+## Usage Examples
 
-### 基本使用
+### Basic Usage
 
 ```python
 from rysen_apexhand_sdk import RysenApexHandSDK
 
-# 创建 SDK 实例
+# Create an SDK instance
 sdk = RysenApexHandSDK()
 
-# 连接机器人（Ethernet 方式）
+# Connect to the robot (Ethernet mode)
 if sdk.Connect("192.168.0.102", connection_type=1):
-    print("连接成功")
+    print("Connection successful")
     
-    # 使能所有手指
+    # Enable all fingers
     sdk.SetFingerEnabled([0, 1, 2, 3, 4], True)
     
-    # 执行控制操作...
+    # Perform control operations...
     
-    # 断开连接
+    # Disconnect
     sdk.Disconnect()
 else:
-    print("连接失败")
+    print("Connection failed")
 ```
 
-### 运行示例程序
+### Run the Example Program
 
 ```bash
-cd examples/python
+cd python
 python example.py
 ```
 
-或使用 Python 3:
+Or use Python 3:
 ```bash
+cd python
 python3 example.py
 ```
 
-## API 说明
+## API Documentation
 
-### 连接管理
+### Connection Management
 
-- `Connect(address, connection_type)`: 连接机器人
-  - `address`: 机器人 IP 地址（字符串）
-  - `connection_type`: 连接类型（1=Ethernet，其他类型后续支持）
-  - 返回: `True` 表示成功，`False` 表示失败
+- `Connect(address, connection_type)`: Connect to the robot
+  - `address`: Robot IP address (string)
+  - `connection_type`: Connection type (1=Ethernet, other types to be supported later)
+  - Returns: `True` for success, `False` for failure
 
-- `Disconnect()`: 断开连接
-  - 返回: `True` 表示成功
+- `Disconnect()`: Disconnect from the robot
+  - Returns: `True` for success
 
-### 手指控制
+### Finger Control
 
-- `SetFingerEnabled(finger_ids, enable)`: 使能/禁用手指
-  - `finger_ids`: 手指 ID 列表（0-4，分别对应拇指、食指、中指、无名指、小指）
-  - `enable`: `True` 为使能，`False` 为禁用
-  - 返回: `True` 表示成功
+- `SetFingerEnabled(finger_ids, enable)`: Enable/disable fingers
+  - `finger_ids`: List of finger IDs (0-4, corresponding to thumb, index finger, middle finger, ring finger, little finger respectively)
+  - `enable`: `True` for enable, `False` for disable
+  - Returns: `True` for success
 
-### 运动控制
+### Motion Control
 
-- `MoveJoint(joint_ids, positions, velocities, accelerations)`: 位置控制（阻塞式）
-  - `joint_ids`: 关节 ID 列表
-  - `positions`: 目标位置列表（弧度）
-  - `velocities`: 速度列表（弧度/秒）
-  - `accelerations`: 加速度列表（弧度/秒²）
-  - 返回: `True` 表示成功
+- `MoveJoint(joint_ids, positions, velocities, accelerations)`: Position control (blocking)
+  - `joint_ids`: List of joint IDs
+  - `positions`: List of target positions (radians)
+  - `velocities`: List of velocities (radians/second)
+  - `accelerations`: List of accelerations (radians/second²)
+  - Returns: `True` for success
 
-- `MoveJPositionFollow(joint_ids, positions)`: 位置跟随控制（非阻塞）
-  - `joint_ids`: 关节 ID 列表
-  - `positions`: 目标位置列表（弧度）
-  - 返回: `True` 表示成功
+- `MoveJPositionFollow(joint_ids, positions)`: Position follow control (non-blocking)
+  - `joint_ids`: List of joint IDs
+  - `positions`: List of target positions (radians)
+  - Returns: `True` for success
 
-### 参数设置
+### Parameter Configuration
 
-- `SetMaxJointSpeed(joint_ids, speeds)`: 设置最大关节速度
-- `SetMaxJointAccel(joint_ids, accels)`: 设置最大关节加速度
-- `SetMaxFingerTorque(finger_ids, torques)`: 设置最大手指扭矩
+- `SetMaxJointSpeed(joint_ids, speeds)`: Set maximum joint speeds
+- `SetMaxJointAccel(joint_ids, accels)`: Set maximum joint accelerations
+- `SetMaxFingerTorque(finger_ids, torques)`: Set maximum finger torques
 
-### 状态获取
+### Status Retrieval
 
-- `GetJointStates()`: 获取关节状态
-  - 返回: 关节状态字典
+- `GetJointStates()`: Retrieve joint states
+  - Returns: Dictionary of joint states
 
-- `GetMotorStates()`: 获取电机状态
-  - 返回: 电机状态字典
+- `GetMotorStates()`: Retrieve motor states
+  - Returns: Dictionary of motor states
 
-- `GetHandSensorImage()`: 获取手部触觉图像
-  - 返回: 图像数据（numpy 数组）
+- `GetHandSensorImage()`: Retrieve hand tactile image
+  - Returns: Image data (numpy array)
 
-### 回调函数
+### Callback Functions
 
-可以注册回调函数来接收实时数据：
+You can register callback functions to receive real-time data:
 
-- `SetJointStatesCallback(callback)`: 设置关节状态回调
-- `SetMotorStatesCallback(callback)`: 设置电机状态回调
-- `SetHandSensorImageCallback(callback)`: 设置触觉图像回调
+- `SetJointStatesCallback(callback)`: Set joint state callback
+- `SetMotorStatesCallback(callback)`: Set motor state callback
+- `SetHandSensorImageCallback(callback)`: Set tactile image callback
 
-回调函数示例：
+Callback function example:
 ```python
 def joint_states_callback(joint_states):
-    print(f"收到关节状态: {joint_states}")
+    print(f"Received joint states: {joint_states}")
 
 sdk.SetJointStatesCallback(joint_states_callback)
 ```
 
-## 注意事项
+## Notes
 
-1. **库文件版本匹配**: `lib/` 目录下的 `.so` 文件应与目标 Python 版本匹配
-   - 例如：`_rysen_sdk.cpython-310-*.so` 对应 Python 3.10
+1. **Library File Version Compatibility**: The `.so` files in the `../rysen_sdk/lib/**/` directory must match the target Python version
+   - Example: `_rysen_sdk.cpython-310-*.so` corresponds to Python 3.10
 
-2. **连接方式**: 目前仅支持 Ethernet 连接（`connection_type=1`）
-   - 设备ip: 192.168.0.102 
+2. **Connection Method**: Only Ethernet connection (`connection_type=1`) is supported currently
+   - Device IP: 192.168.0.102
 
-3. **网络配置**: 确保机器人和主机在同一网络中，防火墙允许相关端口通信
+3. **Network Configuration**: Ensure the robot and host are on the same network, and the firewall allows communication on relevant ports
 
-4. **实时内核**: 建议使用实时内核（PREEMPT_RT）以获得更好的控制性能
+4. **Real-Time Kernel**: It is recommended to use a real-time kernel (PREEMPT_RT) for better control performance
 
-5. **错误处理**: 所有 API 函数返回布尔值表示操作是否成功，建议检查返回值
+5. **Error Handling**: All API functions return a boolean value indicating the success of the operation; it is recommended to check the return value
 
-## 故障排除
+## Troubleshooting
 
-### 导入错误
+### Import Errors
 
-如果遇到 `ImportError`，请检查：
-1. Python 包是否正确安装：`pip list | grep rysen`
-2. 库文件是否存在：`ls examples/python/lib/`
-3. 系统依赖库是否安装：`ldconfig -p | grep spdlog`
+If you encounter an `ImportError`, check the following:
+1. Whether the Python package is installed correctly: `pip list | grep rysen`
+2. Whether the library files exist: `ls ../rysen_sdk/lib/`
+3. Whether the system dependencies are installed: `ldconfig -p | grep spdlog`
 
-### 连接失败
+### Connection Failures
 
-1. 检查机器人 IP 地址是否正确
-2. 检查网络连接：`ping <机器人IP>`
-3. 检查端口是否被占用：`netstat -an | grep 5856`
+1. Check if the robot IP address is correct
+2. Check the network connection: `ping <Robot IP>`
+3. Check if the port is occupied: `netstat -an | grep 5856`
 
-### 运行时错误
+### Runtime Errors
 
-1. 确保系统依赖库已正确安装
-2. 检查库文件权限：`ls -l examples/python/lib/`
-3. 查看详细错误信息，检查 Python 版本兼容性
+1. Ensure the system dependencies are installed correctly
+2. Check library file permissions: `ls -l examples/python/lib/`
+3. Check the detailed error information and verify Python version compatibility
 
-## 更多信息
+## More Information
 
-- 完整示例代码：参考 `example.py`
-- C++ API 文档：参考 `../cpp/rysen_example.cpp`
-- ROS2 接口：参考 `../ros2/rysen_apexhand/README.md`
+- Complete example code: Refer to `example.py`
+- C++ API documentation: Refer to `../cpp/rysen_example.cpp`
+- ROS2 interface: Refer to `../ros2/rysen_apexhand/README.md`

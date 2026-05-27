@@ -5,11 +5,8 @@
  * Copyright (c) 2024-2026, Rysen Robotics (Shenzhen) Co. Ltd.
  * All rights reserved.
  *
- * This file is part of the proprietary rysen_sdk software development kit (SDK)
- * provided by Rysen Robotics (Shenzhen) Co. Ltd.
- * Use, reproduction, modification, distribution, or disclosure of this file,
- * in whole or in part, is strictly prohibited without prior written permission
- * from Rysen Robotics (Shenzhen) Co. Ltd.
+ * Use of this source code is governed by a BSD 3-Clause license that can be
+ * found in the LICENSE file.
  */
 
 #include "rysen_apexhand/rysen_apexhand_node.hpp"
@@ -154,10 +151,10 @@ RysenApexHandNode::RysenApexHandNode(const rclcpp::NodeOptions& options)
     this->declare_parameter<std::string>("startup_hand_ips_csv", "");
     this->declare_parameter<bool>("auto_connect_startup_hands", true);
 
-    joint_names_ = {"f0_joint0", "f0_joint1", "f0_joint2", "f0_joint3", "f0_joint4", "f1_joint0",
-                    "f1_joint1", "f1_joint2", "f1_joint3", "f2_joint0", "f2_joint1", "f2_joint2",
-                    "f2_joint3", "f3_joint0", "f3_joint1", "f3_joint2", "f3_joint3", "f4_joint0",
-                    "f4_joint1", "f4_joint2", "f4_joint3"};
+    joint_names_ = {"thumb_j0",  "thumb_j1", "thumb_j2", "thumb_j3",  "thumb_j4",  "index_j0",
+                    "index_j1",  "index_j2", "index_j3", "middle_j0", "middle_j1", "middle_j2",
+                    "middle_j3", "ring_j0",  "ring_j1",  "ring_j2",   "ring_j3",   "pinky_j0",
+                    "pinky_j1",  "pinky_j2", "pinky_j3"};
     motor_names_ = {
         "thumb_cmc_abd_motor",   "thumb_cmc_rot_motor",         "thumb_cmc_flex_motor",
         "thumb_mcp_flex_motor",  "index_mcp_abd_flex_motor_0",  "index_mcp_abd_flex_motor_1",
@@ -887,6 +884,7 @@ void RysenApexHandNode::HandleGetConnectionInfo(
     response->connected.reserve(hands_.size());
     response->device_ips.reserve(hands_.size());
     response->hand_sides.reserve(hands_.size());
+    response->hardware_uids.reserve(hands_.size());
     for (const auto& kv : hands_) {
         const auto& hand = kv.second;
         if (!hand || !hand->sdk) {
@@ -896,6 +894,7 @@ void RysenApexHandNode::HandleGetConnectionInfo(
         response->ips.push_back(hand->ip);
         response->connected.push_back(is_connected);
         response->device_ips.push_back(is_connected ? hand->ip : "");
+        response->hardware_uids.push_back(hand->sdk->GetHardwareUid());
         if (!is_connected) {
             response->hand_sides.push_back("unknown");
             continue;
@@ -1172,8 +1171,13 @@ void RysenApexHandNode::InitializeJointNameMapping() {
         "middle_dip_flex", "ring_mcp_abd",   "ring_mcp_flex",   "ring_pip_flex",
         "ring_dip_flex",   "little_mcp_abd", "little_mcp_flex", "little_pip_flex",
         "little_dip_flex"};
+    static const std::vector<std::string> other_canonical_joint_names = {
+        "f0_joint0", "f0_joint1", "f0_joint2", "f0_joint3", "f0_joint4", "f1_joint0", "f1_joint1",
+        "f1_joint2", "f1_joint3", "f2_joint0", "f2_joint1", "f2_joint2", "f2_joint3", "f3_joint0",
+        "f3_joint1", "f3_joint2", "f3_joint3", "f4_joint0", "f4_joint1", "f4_joint2", "f4_joint3"};
     for (size_t i = 0; i < canonical_joint_names.size(); ++i) {
         joint_name_to_id_map_[canonical_joint_names[i]] = static_cast<rysen::JointId>(i);
+        joint_name_to_id_map_[other_canonical_joint_names[i]] = static_cast<rysen::JointId>(i);
     }
 }
 

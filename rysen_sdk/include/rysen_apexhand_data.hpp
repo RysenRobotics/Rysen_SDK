@@ -5,11 +5,8 @@
  * Copyright (c) 2024-2026, Rysen Robotics (Shenzhen) Co. Ltd.
  * All rights reserved.
  *
- * This file is part of the proprietary rysen_sdk software development kit (SDK)
- * provided by Rysen Robotics (Shenzhen) Co. Ltd.
- * Use, reproduction, modification, distribution, or disclosure of this file,
- * in whole or in part, is strictly prohibited without prior written permission
- * from Rysen Robotics (Shenzhen) Co. Ltd.
+ * Use of this source code is governed by a BSD 3-Clause license that can be
+ * found in the LICENSE file.
  */
 
 #ifndef RYSEN_APEXHAND_SDK_INCLUDE_RYSEN_APEXHAND_DATA_H_
@@ -87,31 +84,57 @@ enum class MotorId : uint8_t {
 
 // 关节标识 21 个关节
 enum class JointId : uint8_t {
-    JOINT_ID_THUMB_CMC_ABD = 0,   // f0_joint0 拇指腕掌关节 侧摆
-    JOINT_ID_THUMB_CMC_ROT = 1,   // f0_joint1 拇指腕掌关节 旋转
-    JOINT_ID_THUMB_CMC_FLEX = 2,  // f0_joint2 拇指腕掌关节 弯曲
-    JOINT_ID_THUMB_MCP_FLEX = 3,  // f0_joint3 拇指掌指关节 弯曲
-    JOINT_ID_THUMB_IP_FLEX = 4,   // f0_joint4 拇指指间关节 弯曲
+    JOINT_ID_THUMB_J0 = 0,  // f0_joint0 拇指腕掌关节 侧摆
+    JOINT_ID_THUMB_J1 = 1,  // f0_joint1 拇指腕掌关节 旋转
+    JOINT_ID_THUMB_J2 = 2,  // f0_joint2 拇指腕掌关节 弯曲
+    JOINT_ID_THUMB_J3 = 3,  // f0_joint3 拇指掌指关节 弯曲
+    JOINT_ID_THUMB_J4 = 4,  // f0_joint4 拇指指间关节 弯曲
 
-    JOINT_ID_INDEX_MCP_ABD = 5,   // f1_joint0 食指掌指关节 侧摆
-    JOINT_ID_INDEX_MCP_FLEX = 6,  // f1_joint1 食指掌指关节 弯曲
-    JOINT_ID_INDEX_PIP_FLEX = 7,  // f1_joint2 食指近端指间关节 弯曲
-    JOINT_ID_INDEX_DIP_FLEX = 8,  // f1_joint3 食指远端指间关节 弯曲
+    JOINT_ID_INDEX_J0 = 5,  // f1_joint0 食指掌指关节 侧摆
+    JOINT_ID_INDEX_J1 = 6,  // f1_joint1 食指掌指关节 弯曲
+    JOINT_ID_INDEX_J2 = 7,  // f1_joint2 食指近端指间关节 弯曲
+    JOINT_ID_INDEX_J3 = 8,  // f1_joint3 食指远端指间关节 弯曲
 
-    JOINT_ID_MIDDLE_MCP_ABD = 9,    // f2_joint0 中指掌指关节 侧摆
-    JOINT_ID_MIDDLE_MCP_FLEX = 10,  // f2_joint1 中指掌指关节 弯曲
-    JOINT_ID_MIDDLE_PIP_FLEX = 11,  // f2_joint2 中指近端指间关节 弯曲
-    JOINT_ID_MIDDLE_DIP_FLEX = 12,  // f2_joint3 中指远端指间关节 弯曲
+    JOINT_ID_MIDDLE_J0 = 9,   // f2_joint0 中指掌指关节 侧摆
+    JOINT_ID_MIDDLE_J1 = 10,  // f2_joint1 中指掌指关节 弯曲
+    JOINT_ID_MIDDLE_J2 = 11,  // f2_joint2 中指近端指间关节 弯曲
+    JOINT_ID_MIDDLE_J3 = 12,  // f2_joint3 中指远端指间关节 弯曲
 
-    JOINT_ID_RING_MCP_ABD = 13,   // f3_joint0 无名指掌指关节 侧摆
-    JOINT_ID_RING_MCP_FLEX = 14,  // f3_joint1 无名指掌指关节 弯曲
-    JOINT_ID_RING_PIP_FLEX = 15,  // f3_joint2 无名指近端指间关节 弯曲
-    JOINT_ID_RING_DIP_FLEX = 16,  // f3_joint3 无名指远端指间关节 弯曲
+    JOINT_ID_RING_J0 = 13,  // f3_joint0 无名指掌指关节 侧摆
+    JOINT_ID_RING_J1 = 14,  // f3_joint1 无名指掌指关节 弯曲
+    JOINT_ID_RING_J2 = 15,  // f3_joint2 无名指近端指间关节 弯曲
+    JOINT_ID_RING_J3 = 16,  // f3_joint3 无名指远端指间关节 弯曲
 
-    JOINT_ID_LITTLE_MCP_ABD = 17,   // f4_joint0 小指掌指关节 侧摆
-    JOINT_ID_LITTLE_MCP_FLEX = 18,  // f4_joint1 小指掌指关节 弯曲
-    JOINT_ID_LITTLE_PIP_FLEX = 19,  // f4_joint2 小指近端指间关节 弯曲
-    JOINT_ID_LITTLE_DIP_FLEX = 20,  // f4_joint3 小指远端指间关节 弯曲
+    JOINT_ID_PINKY_J0 = 17,  // f4_joint0 小指掌指关节 侧摆
+    JOINT_ID_PINKY_J1 = 18,  // f4_joint1 小指掌指关节 弯曲
+    JOINT_ID_PINKY_J2 = 19,  // f4_joint2 小指近端指间关节 弯曲
+    JOINT_ID_PINKY_J3 = 20,  // f4_joint3 小指远端指间关节 弯曲
+
+    JOINT_ID_THUMB_CMC_ABD = JOINT_ID_THUMB_J0,
+    JOINT_ID_THUMB_CMC_ROT = JOINT_ID_THUMB_J1,
+    JOINT_ID_THUMB_CMC_FLEX = JOINT_ID_THUMB_J2,
+    JOINT_ID_THUMB_MCP_FLEX = JOINT_ID_THUMB_J3,
+    JOINT_ID_THUMB_IP_FLEX = JOINT_ID_THUMB_J4,
+
+    JOINT_ID_INDEX_MCP_ABD = JOINT_ID_INDEX_J0,
+    JOINT_ID_INDEX_MCP_FLEX = JOINT_ID_INDEX_J1,
+    JOINT_ID_INDEX_PIP_FLEX = JOINT_ID_INDEX_J2,
+    JOINT_ID_INDEX_DIP_FLEX = JOINT_ID_INDEX_J3,
+
+    JOINT_ID_MIDDLE_MCP_ABD = JOINT_ID_MIDDLE_J0,
+    JOINT_ID_MIDDLE_MCP_FLEX = JOINT_ID_MIDDLE_J1,
+    JOINT_ID_MIDDLE_PIP_FLEX = JOINT_ID_MIDDLE_J2,
+    JOINT_ID_MIDDLE_DIP_FLEX = JOINT_ID_MIDDLE_J3,
+
+    JOINT_ID_RING_MCP_ABD = JOINT_ID_RING_J0,
+    JOINT_ID_RING_MCP_FLEX = JOINT_ID_RING_J1,
+    JOINT_ID_RING_PIP_FLEX = JOINT_ID_RING_J2,
+    JOINT_ID_RING_DIP_FLEX = JOINT_ID_RING_J3,
+
+    JOINT_ID_LITTLE_MCP_ABD = JOINT_ID_PINKY_J0,
+    JOINT_ID_LITTLE_MCP_FLEX = JOINT_ID_PINKY_J1,
+    JOINT_ID_LITTLE_PIP_FLEX = JOINT_ID_PINKY_J2,
+    JOINT_ID_LITTLE_DIP_FLEX = JOINT_ID_PINKY_J3,
 };
 
 // 固件/库版本信息

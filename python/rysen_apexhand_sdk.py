@@ -6,11 +6,8 @@ This module provides a Python interface to the Rysen ApexHand SDK.
 Copyright (c) 2024-2026, Rysen Robotics (Shenzhen) Co. Ltd.
 All rights reserved.
 
-This file is part of the proprietary rysen_sdk software development kit (SDK)
-provided by Rysen Robotics (Shenzhen) Co. Ltd.
-Use, reproduction, modification, distribution, or disclosure of this file,
-in whole or in part, is strictly prohibited without prior written permission
-from Rysen Robotics (Shenzhen) Co. Ltd.
+Use of this source code is governed by a BSD 3-Clause license that can be
+found in the LICENSE file.
 """
 
 from typing import Callable, List, Optional
@@ -23,16 +20,19 @@ import ctypes
 import platform
 
 _CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+_ROOT_DIR = os.path.abspath(os.path.join(_CURRENT_DIR, ".."))
 
-# --- 🌟 智能架构路由开始 ---
 _ARCH = platform.machine()
 if _ARCH == 'x86_64':
-    _LIB_DIR = os.path.join(_CURRENT_DIR, "lib", "x86_64")
+    _LIB_DIR = os.path.join(_ROOT_DIR, "rysen_sdk", "lib", "x86_64")
 elif _ARCH in ['aarch64', 'arm64']:
-    _LIB_DIR = os.path.join(_CURRENT_DIR, "lib", "aarch64")
+    _LIB_DIR = os.path.join(_ROOT_DIR, "rysen_sdk", "lib", "aarch64")
 else:
     raise RuntimeError(f"Unsupported architecture: {_ARCH}")
-# --- 🌟 智能架构路由结束 ---
+
+# 把库所在的目录强行插到 Python 搜索路径的最前面
+if _LIB_DIR not in sys.path:
+    sys.path.insert(0, _LIB_DIR)
 
 # Ensure the native library directory is discoverable by Python
 if os.path.isdir(_LIB_DIR) and _LIB_DIR not in sys.path:
@@ -1092,4 +1092,3 @@ __all__ = sorted(
         'create_move_j_position_follow_param',
     }
 )
-
