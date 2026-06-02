@@ -10,7 +10,8 @@
  * - Motion parameter configuration via services / 通过服务进行运动参数配置
  * - Subscribing to joint, motor, and hand sensor topics / 订阅关节、电机和手传感器话题
  * - MoveJoint control via blocking service calls / 通过阻塞式服务调用进行 MoveJ 控制
- * - MoveJPositionFollow via topic publishing (non-blocking) / 通过发布话题进行位置随动控制（非阻塞）
+ * - MoveJPositionFollow via topic publishing (non-blocking) /
+ * 通过发布话题进行位置随动控制（非阻塞）
  *
  * Copyright (c) 2024-2026, Rysen Robotics (Shenzhen) Co. Ltd.
  * All rights reserved.
@@ -31,20 +32,20 @@
 #include <vector>
 
 #include "rclcpp/rclcpp.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
-#include "rysen_apexhand_msgs/msg/motor_state.hpp"
+#include "rysen_apexhand_msgs/msg/finger_id.hpp"
 #include "rysen_apexhand_msgs/msg/hand_tactile_forces.hpp"
 #include "rysen_apexhand_msgs/msg/hardware_errors.hpp"
+#include "rysen_apexhand_msgs/msg/motor_state.hpp"
 #include "rysen_apexhand_msgs/srv/connect.hpp"
-#include "rysen_apexhand_msgs/srv/remove_hand.hpp"
+#include "rysen_apexhand_msgs/srv/get_version_info.hpp"
 #include "rysen_apexhand_msgs/srv/move_joint.hpp"
+#include "rysen_apexhand_msgs/srv/remove_hand.hpp"
 #include "rysen_apexhand_msgs/srv/set_all_fingers_enable.hpp"
 #include "rysen_apexhand_msgs/srv/set_finger_enabled.hpp"
-#include "rysen_apexhand_msgs/srv/set_max_joint_speed.hpp"
-#include "rysen_apexhand_msgs/srv/set_max_joint_accel.hpp"
 #include "rysen_apexhand_msgs/srv/set_max_finger_torque.hpp"
-#include "rysen_apexhand_msgs/srv/get_version_info.hpp"
-#include "rysen_apexhand_msgs/msg/finger_id.hpp"
+#include "rysen_apexhand_msgs/srv/set_max_joint_accel.hpp"
+#include "rysen_apexhand_msgs/srv/set_max_joint_speed.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 
 // Globals / 全局变量
 static volatile bool running = true;
@@ -53,12 +54,14 @@ static std::shared_ptr<rclcpp::Node> g_node;
 // 全局声明订阅者，防止它们超出作用域被析构
 static rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr g_joint_states_sub;
 static rclcpp::Subscription<rysen_apexhand_msgs::msg::MotorState>::SharedPtr g_motor_states_sub;
-static rclcpp::Subscription<rysen_apexhand_msgs::msg::HandTactileForces>::SharedPtr g_tactile_forces_sub;
-static rclcpp::Subscription<rysen_apexhand_msgs::msg::HardwareErrors>::SharedPtr g_hardware_errors_sub;
+static rclcpp::Subscription<rysen_apexhand_msgs::msg::HandTactileForces>::SharedPtr
+    g_tactile_forces_sub;
+static rclcpp::Subscription<rysen_apexhand_msgs::msg::HardwareErrors>::SharedPtr
+    g_hardware_errors_sub;
 
 // Constants / 常量
-const std::vector<uint8_t> ALL_JOINT_IDS = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
-                                             11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+const std::vector<uint8_t> ALL_JOINT_IDS = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+                                            11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
 const std::string DEFAULT_DEVICE_IP = "192.168.0.102";
 
 /**
@@ -78,7 +81,7 @@ bool CallService(const std::string& service_name,
                  typename ServiceT::Request::SharedPtr request,
                  typename ServiceT::Response::SharedPtr& response) {
     auto client = g_node->create_client<ServiceT>(service_name);
-    
+
     // Wait for service to be available / 等待服务可用
     if (!client->wait_for_service(std::chrono::seconds(2))) {
         RCLCPP_ERROR(g_node->get_logger(), "❌ Service %s not available", service_name.c_str());
@@ -86,7 +89,7 @@ bool CallService(const std::string& service_name,
     }
 
     auto future = client->async_send_request(request);
-    
+
     // 因为我们有后台线程在 spin，所以可以直接 wait_for 阻塞等待，不会导致死锁
     if (future.wait_for(std::chrono::seconds(5)) != std::future_status::ready) {
         RCLCPP_ERROR(g_node->get_logger(), "❌ Service call to %s timed out", service_name.c_str());
@@ -141,7 +144,8 @@ bool DisconnectHand(const std::string& device_ip) {
     }
 
     if (!response->success) {
-        RCLCPP_WARN(g_node->get_logger(), "⚠️ 断开连接警告: %s", response->message.c_str());
+        RCLCPP_WARN(g_node->get_logger(), "⚠️ 断开连接警告: %s",
+                    response->message.c_str());
     } else {
         std::cout << "✅ 已断开连接" << std::endl;
     }
@@ -181,13 +185,13 @@ bool SetAllFingersEnabled(const std::string& device_ip, bool enable) {
 bool SetFingerEnabled(const std::string& device_ip, uint8_t finger_id, bool enable) {
     std::string op = enable ? "使能" : "禁用";
     std::string finger_name[] = {"拇指", "食指", "中指", "无名指", "小指"};
-    
+
     std::cout << "\n=== " << op << finger_name[finger_id] << "手指 ===" << std::endl;
 
     auto request = std::make_shared<rysen_apexhand_msgs::srv::SetFingerEnabled::Request>();
     request->ip = device_ip;
     request->enable = enable;
-    
+
     rysen_apexhand_msgs::msg::FingerId finger_msg;
     finger_msg.finger_id = finger_id;
     request->finger_ids.push_back(finger_msg);
@@ -227,8 +231,7 @@ bool SetMaxJointSpeeds(const std::string& device_ip) {
     }
 
     if (!response->success) {
-        RCLCPP_ERROR(g_node->get_logger(), "❌ 设置最大关节速度失败: %s",
-                     response->message.c_str());
+        RCLCPP_ERROR(g_node->get_logger(), "❌ 设置最大关节速度失败: %s", response->message.c_str());
         return false;
     }
 
@@ -273,7 +276,7 @@ bool SetMaxFingerTorques(const std::string& device_ip) {
     auto request = std::make_shared<rysen_apexhand_msgs::srv::SetMaxFingerTorque::Request>();
     request->ip = device_ip;
     request->get_only = false;
-    
+
     for (uint8_t i = 0; i < 5; ++i) {
         // 直接推入 uint8_t 基础类型即可
         request->finger_ids.push_back(i);
@@ -287,8 +290,7 @@ bool SetMaxFingerTorques(const std::string& device_ip) {
     }
 
     if (!response->success) {
-        RCLCPP_ERROR(g_node->get_logger(), "❌ 设置最大手指扭矩失败: %s",
-                     response->message.c_str());
+        RCLCPP_ERROR(g_node->get_logger(), "❌ 设置最大手指扭矩失败: %s", response->message.c_str());
         return false;
     }
 
@@ -302,7 +304,8 @@ bool SetMaxFingerTorques(const std::string& device_ip) {
 void JointStatesCallback(const sensor_msgs::msg::JointState::SharedPtr msg) {
     static int count = 0;
     if (++count % 50 == 0) {  // 降低打印频率防止刷屏
-        std::cout << "[JointStates] 接收到状态: 包含 " << msg->name.size() << " 个关节" << std::endl;
+        std::cout << "[JointStates] 接收到状态: 包含 " << msg->name.size() << " 个关节"
+                  << std::endl;
     }
 }
 
@@ -311,7 +314,7 @@ void JointStatesCallback(const sensor_msgs::msg::JointState::SharedPtr msg) {
  */
 void MotorStatesCallback(const rysen_apexhand_msgs::msg::MotorState::SharedPtr) {
     static int count = 0;
-    if (++count % 50 == 0) { 
+    if (++count % 50 == 0) {
         std::cout << "[MotorStates] 接收到电机底层状态" << std::endl;
     }
 }
@@ -340,21 +343,17 @@ void SubscribeToTopics(const std::string& device_topic_prefix) {
     std::cout << "\n=== 订阅数据话题 ===" << std::endl;
 
     // 分配给全局指针，确保生命周期跟随程序
-    g_joint_states_sub =
-        g_node->create_subscription<sensor_msgs::msg::JointState>(
-            device_topic_prefix + "/joint_states", 10, JointStatesCallback);
+    g_joint_states_sub = g_node->create_subscription<sensor_msgs::msg::JointState>(
+        device_topic_prefix + "/joint_states", 10, JointStatesCallback);
 
-    g_motor_states_sub =
-        g_node->create_subscription<rysen_apexhand_msgs::msg::MotorState>(
-            device_topic_prefix + "/motor_states", 10, MotorStatesCallback);
+    g_motor_states_sub = g_node->create_subscription<rysen_apexhand_msgs::msg::MotorState>(
+        device_topic_prefix + "/motor_states", 10, MotorStatesCallback);
 
-    g_tactile_forces_sub =
-        g_node->create_subscription<rysen_apexhand_msgs::msg::HandTactileForces>(
-            device_topic_prefix + "/hand_tactile_forces", 10, TactileForcesCallback);
+    g_tactile_forces_sub = g_node->create_subscription<rysen_apexhand_msgs::msg::HandTactileForces>(
+        device_topic_prefix + "/hand_tactile_forces", 10, TactileForcesCallback);
 
-    g_hardware_errors_sub =
-        g_node->create_subscription<rysen_apexhand_msgs::msg::HardwareErrors>(
-            device_topic_prefix + "/hardware_errors", 10, HardwareErrorsCallback);
+    g_hardware_errors_sub = g_node->create_subscription<rysen_apexhand_msgs::msg::HardwareErrors>(
+        device_topic_prefix + "/hardware_errors", 10, HardwareErrorsCallback);
 
     std::cout << "✅ 已注册回调并订阅数据话题" << std::endl;
 }
@@ -373,8 +372,8 @@ bool ExecuteMoveJoint(const std::string& device_ip,
     for (const auto& target : joint_targets) {
         request->joint_ids.push_back(target.first);
         request->positions.push_back(target.second);
-        request->velocities.push_back(2.0);      // 2.0 rad/s
-        request->accelerations.push_back(8.0);   // 8.0 rad/s²
+        request->velocities.push_back(2.0);     // 2.0 rad/s
+        request->accelerations.push_back(8.0);  // 8.0 rad/s²
     }
 
     auto response = std::make_shared<rysen_apexhand_msgs::srv::MoveJoint::Response>();
@@ -409,19 +408,14 @@ void PerformMoveJPositionFollowDemo(const std::string& device_topic_prefix) {
         int delay_ms;
     };
 
-    std::vector<Waypoint> waypoints = {
-        {0.0, 100},   {0.1, 50},  {0.2, 50},  {0.3, 50},  {0.4, 50},   {0.5, 50},
-        {0.6, 50},    {0.7, 50},  {0.8, 100}, {0.7, 50},  {0.6, 50},   {0.5, 50},
-        {0.4, 50},    {0.3, 50},  {0.2, 50},  {0.1, 50},  {0.0, 100}};
+    std::vector<Waypoint> waypoints = {{0.0, 100}, {0.1, 50}, {0.2, 50}, {0.3, 50},  {0.4, 50},
+                                       {0.5, 50},  {0.6, 50}, {0.7, 50}, {0.8, 100}, {0.7, 50},
+                                       {0.6, 50},  {0.5, 50}, {0.4, 50}, {0.3, 50},  {0.2, 50},
+                                       {0.1, 50},  {0.0, 100}};
 
     // 修复：这里使用规范的字符串名称，而不是简单的 "joint_x"
     const std::vector<std::string> finger_joint_names = {
-        "thumb_mcp_flex",
-        "index_mcp_flex",
-        "middle_mcp_flex",
-        "ring_mcp_flex",
-        "little_mcp_flex"
-    };
+        "thumb_mcp_flex", "index_mcp_flex", "middle_mcp_flex", "ring_mcp_flex", "little_mcp_flex"};
 
     const std::vector<std::string> finger_names = {"拇指", "食指", "中指", "无名指", "小指"};
 
@@ -442,9 +436,8 @@ void PerformMoveJPositionFollowDemo(const std::string& device_topic_prefix) {
 
             follow_pub->publish(*msg);
 
-            std::cout << "  点 " << (i + 1) << "/" << waypoints.size()
-                      << ": 位置=" << std::fixed << std::setprecision(2) << waypoint.position
-                      << " rad" << std::endl;
+            std::cout << "  点 " << (i + 1) << "/" << waypoints.size() << ": 位置=" << std::fixed
+                      << std::setprecision(2) << waypoint.position << " rad" << std::endl;
 
             if (i < waypoints.size() - 1) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(waypoint.delay_ms));
@@ -467,7 +460,8 @@ bool RemoveHand(const std::string& device_ip) {
     request->ip = device_ip;
 
     auto response = std::make_shared<rysen_apexhand_msgs::srv::RemoveHand::Response>();
-    if (!CallService<rysen_apexhand_msgs::srv::RemoveHand>("rysen/apexhand/remove_hand", request, response)) {
+    if (!CallService<rysen_apexhand_msgs::srv::RemoveHand>("rysen/apexhand/remove_hand", request,
+                                                           response)) {
         return false;
     }
     std::cout << (response->success ? "✅ 移除成功" : "❌ 移除失败") << std::endl;
@@ -480,23 +474,21 @@ bool RemoveHand(const std::string& device_ip) {
 int main(int argc, char* argv[]) {
     // Initialize ROS2 / 初始化 ROS2
     rclcpp::init(argc, argv);
-    
+
     g_node = rclcpp::Node::make_shared("ros_example_node");
-    
+
     // Register signal handler / 注册信号处理函数
     signal(SIGINT, SignalHandler);
 
     //使用 Executor 管理节点，方便后续安全退出
     rclcpp::executors::SingleThreadedExecutor executor;
     executor.add_node(g_node);
-    std::thread spin_thread([&executor]() {
-        executor.spin();
-    });
+    std::thread spin_thread([&executor]() { executor.spin(); });
 
     std::string device_ip = DEFAULT_DEVICE_IP;
     std::string raw_topic_prefix = "rysen/apexhand/ip_" + device_ip;
     std::replace(raw_topic_prefix.begin(), raw_topic_prefix.end(), '.', '_');
-    std::string device_topic_prefix = raw_topic_prefix; // Default topic prefix
+    std::string device_topic_prefix = raw_topic_prefix;  // Default topic prefix
 
     // Parse command line arguments / 解析命令行参数
     std::cout << "\n=== ROS2 ApexHand 客户端示例节点 ===" << std::endl;
@@ -517,7 +509,7 @@ int main(int argc, char* argv[]) {
 
     // ========== Finger enable/disable tests / 手指使能/禁用测试 ==========
     std::cout << "\n=== 测试 SetAllFingersEnabled/Disabled 接口 ===" << std::endl;
-    
+
     SetAllFingersEnabled(device_ip, true);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
@@ -525,7 +517,7 @@ int main(int argc, char* argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     // Test single finger enable / 测试单个手指使能
-    SetFingerEnabled(device_ip, 1, true);   // Enable index finger / 使能食指
+    SetFingerEnabled(device_ip, 1, true);  // Enable index finger / 使能食指
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     SetFingerEnabled(device_ip, 1, false);  // Disable index finger / 禁用食指
@@ -560,18 +552,18 @@ int main(int argc, char* argv[]) {
         {7, 0.8},   // Index PIP FLEX
         {8, 0.8},   // Index DIP FLEX
 
-        {9, 0.15},   // Middle MCP ABD
-        {10, 0.8},  // Middle MCP FLEX
-        {11, 0.8},  // Middle PIP FLEX
-        {12, 0.8},  // Middle DIP FLEX
+        {9, 0.15},    // Middle MCP ABD
+        {10, 0.8},    // Middle MCP FLEX
+        {11, 0.8},    // Middle PIP FLEX
+        {12, 0.8},    // Middle DIP FLEX
         {13, -0.15},  // Ring MCP ABD
-        {14, 0.8},  // Ring MCP FLEX
-        {15, 0.8},  // Ring PIP FLEX
-        {16, 0.8},  // Ring DIP FLEX
-        {17, -0.3},  // Little MCP ABD
-        {18, 0.8},  // Little MCP FLEX
-        {19, 0.8},  // Little PIP FLEX
-        {20, 0.8}   // Little DIP FLEX
+        {14, 0.8},    // Ring MCP FLEX
+        {15, 0.8},    // Ring PIP FLEX
+        {16, 0.8},    // Ring DIP FLEX
+        {17, -0.3},   // Little MCP ABD
+        {18, 0.8},    // Little MCP FLEX
+        {19, 0.8},    // Little PIP FLEX
+        {20, 0.8}     // Little DIP FLEX
     };
     ExecuteMoveJoint(device_ip, targets_1);
 
@@ -590,7 +582,7 @@ int main(int argc, char* argv[]) {
 
     // 保持连接，接收一会数据再退出
     std::cout << "\n=== 测试结束，持续接收数据5秒后退出 ===" << std::endl;
-    for(int i = 0; i < 50 && running; ++i) {
+    for (int i = 0; i < 50 && running; ++i) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
@@ -607,7 +599,7 @@ int main(int argc, char* argv[]) {
 
     // 遵循严格的 ROS 2 资源释放顺序
     running = false;
-    
+
     // 1. 安全取消后台执行器，打断 spin 阻塞，并等待线程安全退出
     executor.cancel();
     if (spin_thread.joinable()) {
@@ -622,7 +614,7 @@ int main(int argc, char* argv[]) {
     g_node.reset();
 
     // 3. 此时底层的收发实体已清空，可以安全关闭通信上下文了
-    rclcpp::shutdown();  
+    rclcpp::shutdown();
 
     return 0;
 }
