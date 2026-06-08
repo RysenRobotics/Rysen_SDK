@@ -38,3 +38,10 @@ Thumbs.db
 # =========================
 # 强制 Git 追踪 rysen_sdk 下的动态库，即使前面有忽略规则也不生效
 !rysen_sdk/lib/**/*.so*
+
+# Docker 文件（不相关的docker文件）
+docker/docker-compose.arm64.pi.yml
+docker/Dockerfile.cross_arm64
+
+# .tar文件（Docker images）
+*.tar

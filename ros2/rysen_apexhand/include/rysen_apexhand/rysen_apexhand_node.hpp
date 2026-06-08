@@ -63,7 +63,9 @@ class RysenApexHandNode : public rclcpp::Node {
         std::string hand_side{"unknown"};
         rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr move_j_position_follow_sub;
         std::mutex follow_control_owner_mutex;
-        std::string follow_control_owner_id;
+        // 使用固定大小的数组直接存储底层 GID，抛弃 std::string
+        std::array<uint8_t, RMW_GID_STORAGE_SIZE> follow_control_owner_gid;
+        bool has_follow_owner{false};  // 标志位，是否已经被占用
         rclcpp::Time follow_control_owner_last_seen{0, 0, RCL_SYSTEM_TIME};
         rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_states_pub;
         rclcpp::Publisher<rysen_apexhand_msgs::msg::MotorState>::SharedPtr motor_states_pub;

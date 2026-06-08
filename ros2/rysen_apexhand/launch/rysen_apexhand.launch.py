@@ -42,7 +42,7 @@ def generate_launch_description() -> LaunchDescription:
         "move_j_position_follow_command_topic",
         default_value="move_j_position_follow_command");
     declare_follow_control_owner_timeout_ms = DeclareLaunchArgument(
-        "follow_control_owner_timeout_ms", default_value="2000")
+        "follow_control_owner_timeout_ms", default_value="100")
     declare_is_finger_enabled_service = DeclareLaunchArgument(
         "is_finger_enabled_service", 
         default_value="rysen/apexhand/is_finger_enabled",

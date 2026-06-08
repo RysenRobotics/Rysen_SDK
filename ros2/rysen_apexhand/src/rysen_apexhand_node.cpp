@@ -929,36 +929,54 @@ void RysenApexHandNode::OnMoveJPositionFollowCommand(
     if (!hand || !hand->sdk || !hand->sdk->IsConnected()) {
         return;
     }
-    std::ostringstream oss;
-    const auto& gid = message_info.get_rmw_message_info().publisher_gid;
-    oss << std::hex << std::setfill('0');
-    for (size_t i = 0; i < RMW_GID_STORAGE_SIZE; ++i) {
-        oss << std::setw(2) << static_cast<int>(gid.data[i]);
-    }
-    const std::string requester_id = oss.str();
+
+    // 1. 获取底层 GID 和当前时间
+    const auto& gid_data = message_info.get_rmw_message_info().publisher_gid.data;
     const rclcpp::Time now = GetSystemNow();
     {
         std::lock_guard<std::mutex> lock(hand->follow_control_owner_mutex);
-        if (!hand->follow_control_owner_id.empty()) {
+
+        // 判断发送者是否是当前的 owner
+        bool is_same_owner =
+            hand->has_follow_owner && (std::memcmp(hand->follow_control_owner_gid.data(), gid_data,
+                                                   RMW_GID_STORAGE_SIZE) == 0);
+
+        // 2. 超时检测
+        if (hand->has_follow_owner) {
             const int64_t elapsed_ms =
                 (now - hand->follow_control_owner_last_seen).nanoseconds() / 1000000;
+
             if (elapsed_ms > follow_control_owner_timeout_ms_) {
-                RCLCPP_INFO(this->get_logger(),
-                            "Follow owner timeout for hand %s, releasing owner: %s",
-                            hand->ip.c_str(), hand->follow_control_owner_id.c_str());
-                hand->follow_control_owner_id.clear();
+                if (is_same_owner) {
+                    // 是原来的主人，只是迟到了！静默续期，防止日志风暴和锁翻转
+                    RCLCPP_DEBUG_THROTTLE(this->get_logger(), *this->get_clock(), 5000,
+                                          "Follow owner jitter detected for hand %s (delayed %ld "
+                                          "ms). Renewing silently.",
+                                          hand->ip.c_str(), elapsed_ms);
+                } else {
+                    // 真超时了，且来了一个新主人。正式释放控制权
+                    RCLCPP_INFO(this->get_logger(),
+                                "Follow owner timeout for hand %s, releasing owner.",
+                                hand->ip.c_str());
+                    hand->has_follow_owner = false;
+                }
             }
         }
-        if (hand->follow_control_owner_id.empty()) {
-            hand->follow_control_owner_id = requester_id;
-            RCLCPP_INFO(this->get_logger(), "Follow owner acquired for hand %s: %s",
-                        hand->ip.c_str(), hand->follow_control_owner_id.c_str());
-        } else if (hand->follow_control_owner_id != requester_id) {
+
+        // 3. 锁的分配与拦截逻辑
+        if (!hand->has_follow_owner) {
+            // 易主，或者第一次获取锁
+            std::memcpy(hand->follow_control_owner_gid.data(), gid_data, RMW_GID_STORAGE_SIZE);
+            hand->has_follow_owner = true;
+            RCLCPP_INFO(this->get_logger(), "Follow owner acquired for hand %s.", hand->ip.c_str());
+        } else if (!is_same_owner) {
+            // 锁在别人手里，直接拒绝
             RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 2000,
                                  "Follow ignored for hand %s: owner is another publisher",
                                  hand->ip.c_str());
             return;
         }
+        // 4. 更新保活时间戳
         hand->follow_control_owner_last_seen = now;
     }
 

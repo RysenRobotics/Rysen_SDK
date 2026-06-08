@@ -4,7 +4,7 @@
 
 # 🦾 Rysen ApexHand SDK
 
-This repository provides library files for Rysen ApexHand (supporting x86_64 and aarch64 architectures) along with operational examples for C++, Python, and ROS2. These examples demonstrate how to use the SDK's APIs.
+This repository provides library files for Rysen ApexHand (including x86_64 and aarch64 architectures) as well as operational examples using C++, Python, and ROS2. These examples demonstrate how to use the SDK's APIs.
 
 ## 📁 Repository Structure
 
@@ -29,6 +29,7 @@ This repository provides library files for Rysen ApexHand (supporting x86_64 and
 │   ├── README.md
 │   ├── rysen_apexhand_sdk.py
 │   └── setup.py
+├── README_CN.md
 ├── README.md
 ├── ros2
 │   ├── rysen_apexhand
@@ -60,9 +61,63 @@ This repository provides library files for Rysen ApexHand (supporting x86_64 and
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Recommended)
 
-### 🛠️ C++
+We highly recommend using our provided intelligent environment startup script. This script automatically detects your system architecture (amd64 / arm64) and prepares a Docker container with all dependencies following an optimal strategy (local cache -> GHCR cloud -> offline Tar package -> source code build).
+
+### 1. One-click Launch of Development Environment
+
+**🐧 Linux / macOS Users:**
+
+```bash
+# Execute in the root directory of the repository
+chmod +x ./scripts/start_env.sh
+./scripts/start_env.sh
+```
+
+**🪟 Windows Users:**
+Double-click the `./scripts/start_env.bat` file in the root directory directly, or execute it in the command line:
+
+```cmd
+./scripts/start_env.bat
+```
+
+> **📦 Deployment Instructions for Offline/Low-Network Environments (Must Read)**:
+> If the device you are using (such as the industrial computer inside a robot) cannot connect to the external network, or pulling the image is extremely slow:
+> 1. Please go to the [Releases page](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1) of this repository to download the corresponding offline image package:
+> * For x86_64 devices (PC/Server), download: `rysen_sdk_image.tar`
+> * For ARM64 devices (Raspberry Pi/Jetson, etc.), download: `rysen_sdk_arm64_image.tar`
+> 
+> 2. Place the downloaded `.tar` file in the **root directory** of the repository.
+> 3. Run the startup script again, and the script will automatically detect and load the offline package at high speed!
+
+### 2. Get Started
+
+After successful startup, the script will automatically guide you to the `/workspace` directory of the `rysen_sdk_env` container. Inside the container, you can directly run any C++, Python, or ROS2 examples, and all dependencies are ready.
+
+---
+
+## 💻 Local Bare-Metal Development Guide
+
+If you do not want to use Docker and hope to develop natively directly on the host system, please configure your local environment according to the following steps.
+
+### 📌 System and Dependency Requirements
+
+* **Operating System**: Linux (Ubuntu 22.04 is highly recommended)
+* **Compiler**: GCC 9+ / Clang 10+ (supports C++17), CMake 3.10+
+* **Environment Requirements**: Python 3.10, ROS2 Humble (if you need to use the corresponding module)
+
+**Quick Installation of Dependencies (Ubuntu Only)**:
+
+```bash
+# Run the one-click installation script in the root directory
+chmod +x install_rysen_deps.sh
+./install_rysen_deps.sh
+```
+
+*(Note: This script will automatically install required libraries such as Boost, libserialport, spdlog, fmt, yaml-cpp.)*
+
+### 🛠️ Run C++ Examples
 
 ```bash
 cd cpp
@@ -71,15 +126,18 @@ cmake ..
 make
 ./bin/rysen_example
 ```
-> 💡 For detailed instructions, refer to [cpp/README.md](cpp/README.md).
+
+> 💡 For detailed instructions, please refer to [cpp/README.md](cpp/README.md).
 
 ### 🐍 Python
+
 ```bash
 cd python
 pip install -e .
 python example.py
 ```
-> 💡 For detailed instructions, refer to [python/README.md](python/README.md).
+
+> 💡 For detailed instructions, please refer to [python/README.md](python/README.md).
 
 ### 🐢 ROS2
 
@@ -105,79 +163,32 @@ ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
 * Provides position control service (`MoveJoint`) and finger enable service (`SetFingerEnabled`)
 * Publishes motor status and tactile sensor data
 
-> 📖 **For detailed instructions, refer to**:
+> 📖 **For detailed instructions, please refer to**:
 > * [ros2/rysen_apexhand_msgs/README.md](ros2/rysen_apexhand_msgs/README.md) - Message and service definitions
 > * [ros2/rysen_apexhand/README.md](ros2/rysen_apexhand/README.md) - ROS2 node usage instructions
->
->
-
----
-
-### 🐳 Docker Environment
-```bash
-# Linux (x86_64)
-cd docker
-docker compose -f docker-compose.yml up -d
-docker exec -it rysen_sdk_env /bin/bash
-```
-
-```bash
-# Linux (aarch64)
-cd docker
-docker compose -f docker-compose.arm64.yml up -d
-docker exec -it rysen_sdk_arm64_env /bin/bash
-```
-
-> 💡 For detailed instructions, refer to [docker/README.md](docker/README.md).
-
----
-
-## 💻 System Requirements
-
-### 📌 Basic Requirements
-* **Operating System**: Linux (Ubuntu 22.04 recommended)
-* **Dependent Libraries**: 
-  * Boost (libboost-all-dev)
-  * libserialport (libserialport-dev)
-  * spdlog (libspdlog-dev)
-  * fmt (libfmt-dev)
-  * yaml-cpp (libyaml-cpp-dev)
-
-### 🔧 Dependency Installation
-
-**Quick Installation (Recommended)**:
-
-```bash
-# In the root directory
-chmod +x install_rysen_deps.sh
-./install_rysen_deps.sh
-```
-
-> ℹ️ This script automatically installs all required dependent libraries. If some dependencies are already installed, the script will skip them.
-
-### 🧩 Additional Requirements
-* **C++ Examples**: GCC 9+ or Clang 10+ (supports C++17), CMake 3.10+
-* **Python Examples**: Python 3.10
-* **ROS2 Examples**: ROS2 Humble
 
 ---
 
 ## 🔌 Connection Configuration
-> ⚠️ All example programs use **Ethernet** connection by default: (Ensure the local IP address is in the same network segment as the device address: `192.168.0.xxx`)
 
-> **Default IP Address**: `192.168.0.102` (Can be modified in the code. Location: `cpp/rysen_example.cpp`, `python/example.py`, `ros2/rysen_apexhand/src/rysen_ros_example_node.cpp`)
+> ⚠️ All example programs use **Ethernet** connection by default (ensure the local address and the device address are in the same network segment: `192.168.0.xxx`).
+
+> **Default IP Address**: `192.168.0.102` (can be modified in the code, specific locations are in `cpp/rysen_example.cpp`,
+`python/example.py`,
+`ros2/rysen_apexhand/src/rysen_ros_example_node.cpp`)
 
 **Notes**:
-1. Ensure the robot and host are in the same network
-2. The firewall allows communication on relevant ports
-3. The robot's IP address is configured correctly
-4. Cloning this repository on Windows may cause dynamic library links to become text files (resulting in corrupted library files). Solution:
+1. Ensure the robot and the host are in the same network.
+2. The firewall allows communication on relevant ports.
+3. The robot's IP address is configured correctly.
+4. Cloning this repository on Windows may cause dynamic library links to become text files (resulting in library file corruption). The solution is as follows:
+
     ```bash
     cd /workspace/rysen_sdk/lib/x86_64
-    # Delete fake links damaged by Windows
+    # Delete the fake links damaged by Windows
     rm librysen_sdk.so librysen_sdk.so.1
 
-    # Recreate native Linux soft links
+    # Re-establish native Linux soft links
     ln -s librysen_sdk.so.1.x.x librysen_sdk.so.1
     ln -s librysen_sdk.so.1 librysen_sdk.so
     ```
@@ -185,14 +196,15 @@ chmod +x install_rysen_deps.sh
 ---
 
 ## 📦 SDK Library File Description
-This project provides a unified `rysen_sdk/` directory in the root directory, and all example programs dynamically link to the library files here.
+
+This project provides a unified `rysen_sdk/` directory in the root directory, and all example programs dynamically link to the library files here:
 
 * `rysen_sdk/include/` - C++ header files of the SDK
-* `rysen_sdk/lib/x86_64/` - Dynamic link libraries for general PC/server platforms
-* `rysen_sdk/lib/aarch64/` - Dynamic link libraries for ARM edge computing platforms such as Raspberry Pi and NVIDIA Jetson
+* `rysen_sdk/lib/x86_64/` - Dynamic link libraries suitable for ordinary PC/server platforms
+* `rysen_sdk/lib/aarch64/` - Dynamic link libraries suitable for ARM edge computing platforms such as Raspberry Pi and NVIDIA Jetson
 
 **🧠 Intelligent Architecture Routing**:
-When building C++ or ROS 2 projects, the CMake script automatically identifies the physical architecture of the current system (`uname -m`) and intelligently and seamlessly links the `librysen_sdk.so` in the directory corresponding to the platform. Developers do not need to modify the path manually.
+When building C++ or ROS 2 projects, the CMake script will automatically identify the physical architecture of the current system (`uname -m`) and intelligently and seamlessly link to the `librysen_sdk.so` in the directory corresponding to the platform. Developers do not need to modify the path manually.
 
 ---
 

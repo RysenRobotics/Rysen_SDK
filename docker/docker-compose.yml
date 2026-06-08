@@ -1,8 +1,9 @@
 services:
   rysen_sdk:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.rysen_sdk
+    # build:
+    #   context: ..
+    #   dockerfile: docker/Dockerfile.rysen_sdk
+    pull_policy: never
     image: rysen_sdk:latest
     container_name: rysen_sdk_env
     volumes:
