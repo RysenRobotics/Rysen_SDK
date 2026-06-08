@@ -1,19 +1,20 @@
 @echo off
-:: 强制使用 UTF-8 编码，防止中文乱码
-chcp 65001 >nul
 setlocal enabledelayedexpansion
 
-echo === 🦾 Rysen ApexHand SDK Windows 环境启动 ===
+:: Run from SDK root (parent of scripts/)
+cd /d "%~dp0\.."
 
-:: 默认按 amd64/x86_64 处理
+echo === Rysen ApexHand SDK Windows Environment Startup ===
+
+:: Default: amd64 / x86_64
 set IMAGE_NAME=rysen_sdk:latest
 set GHCR_IMAGE=ghcr.io/rysenrobotics/rysen_sdk:latest
 set TAR_FILE=rysen_sdk_image.tar
-set COMPOSE_FILE=docker/docker-compose.yml
-set DOCKERFILE=docker/Dockerfile.rysen_sdk
+set COMPOSE_FILE=docker\docker-compose.yml
+set DOCKERFILE=docker\Dockerfile.rysen_sdk
 set CONTAINER_NAME=rysen_sdk_env
 
-:: 智能侦测：ARM64 架构
+:: ARM64 detection
 if /i "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
     set IMAGE_NAME=rysen_sdk_arm64:latest
     set GHCR_IMAGE=ghcr.io/rysenrobotics/rysen_sdk_arm64:latest
@@ -23,53 +24,67 @@ if /i "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
     set CONTAINER_NAME=rysen_sdk_arm64_env
 )
 
-echo 💻 检测到系统架构: %PROCESSOR_ARCHITECTURE%
+echo Detected architecture: %PROCESSOR_ARCHITECTURE%
 
-echo 🔍 [1/4] 检查本地镜像...
+echo [1/4] Checking local image...
 docker image inspect %IMAGE_NAME% >nul 2>&1
-if %errorlevel% equ 0 (
-    echo ✅ 本地已存在镜像 '%IMAGE_NAME%'，跳过拉取/构建环节。
+if !errorlevel! equ 0 (
+    echo Local image '%IMAGE_NAME%' found, skipping pull/build.
     goto :start_container
 )
 
-echo 🌐 [2/4] 尝试从 GHCR (GitHub) 拉取镜像...
+echo [2/4] Pulling image from GHCR...
 docker pull %GHCR_IMAGE%
-if %errorlevel% equ 0 (
-    echo ✅ 从 GHCR 拉取成功！
+if !errorlevel! equ 0 (
+    echo Pull from GHCR succeeded.
     docker tag %GHCR_IMAGE% %IMAGE_NAME%
     goto :start_container
 )
-echo ⚠️ 从 GHCR 拉取失败 (可能是网络连接问题)。
+echo WARNING: GHCR pull failed (network issue?).
 
-echo 📦 [3/4] 尝试查找并加载离线镜像包...
+echo [3/4] Looking for offline image tarball...
 if exist "%TAR_FILE%" (
-    echo 找到离线包 '%TAR_FILE%'，正在加载...
+    echo Found '%TAR_FILE%', loading...
     docker load -i "%TAR_FILE%"
     if !errorlevel! equ 0 (
-        echo ✅ 离线包加载成功！
+        echo Offline image loaded successfully.
         goto :start_container
     ) else (
-        echo ⚠️ 离线包加载失败 (文件可能损坏)，将尝试后备方案...
+        echo WARNING: Failed to load tarball, trying fallback...
     )
 ) else (
-    echo ⚠️ 当前目录下未找到离线包 '%TAR_FILE%'。
+    echo WARNING: Offline tarball '%TAR_FILE%' not found in SDK root.
 )
 
-echo 🔨 [4/4] 尝试通过 Dockerfile 本地构建...
+echo [4/4] Building image from Dockerfile...
 docker build -t %IMAGE_NAME% -f "%DOCKERFILE%" .
-if %errorlevel% equ 0 (
-    echo ✅ 本地构建成功！
+if !errorlevel! equ 0 (
+    echo Local build succeeded.
     goto :start_container
 )
-echo ❌ 本地构建失败 (基础镜像拉取超时等原因)。
-echo 👉 最终解决方案：请确保网络畅通，或前往 GitHub Releases 下载离线镜像包 '%TAR_FILE%' 放置在当前目录下后重试。
+echo ERROR: Local build failed (base image pull timeout, etc.).
+echo Please ensure network access, or download '%TAR_FILE%' from GitHub Releases
+echo and place it in the SDK root directory, then retry.
 goto :error_end
 
 :start_container
-echo === 🚀 正在启动容器环境 ===
+echo === Starting container environment ===
 docker compose -f "%COMPOSE_FILE%" up -d
-echo 🎉 容器启动完成！可以使用以下命令进入环境：
-echo docker exec -it %CONTAINER_NAME% /bin/bash
+if !errorlevel! neq 0 (
+    echo ERROR: docker compose failed. Try: docker-compose -f "%COMPOSE_FILE%" up -d
+    goto :error_end
+)
+
+:: ================= 自动化无痕修复软链接 =================
+echo [Info] Auto-fixing Linux symlinks for Windows host...
+:: 修复 x86_64 目录
+docker exec %CONTAINER_NAME% /bin/bash -c "cd /workspace/rysen_sdk/lib/x86_64 2>/dev/null && rm -f librysen_sdk.so librysen_sdk.so.1 && ln -s librysen_sdk.so.1.* librysen_sdk.so.1 && ln -s librysen_sdk.so.1 librysen_sdk.so"
+:: 修复 aarch64 目录
+docker exec %CONTAINER_NAME% /bin/bash -c "cd /workspace/rysen_sdk/lib/aarch64 2>/dev/null && rm -f librysen_sdk.so librysen_sdk.so.1 && ln -s librysen_sdk.so.1.* librysen_sdk.so.1 && ln -s librysen_sdk.so.1 librysen_sdk.so"
+:: ===================================================================
+
+echo [Success] Container started. Enter the environment with:
+echo    docker exec -it %CONTAINER_NAME% /bin/bash
 goto :eof
 
 :error_end
