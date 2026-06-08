@@ -142,6 +142,7 @@ python example.py
 ### 🐢 ROS2
 
 ```bash
+source /opt/ros/humble/setup.bash
 cd ros2
 colcon build
 source install/setup.bash
@@ -152,6 +153,7 @@ ros2 launch rysen_apexhand rysen_apexhand.launch.py
 
 ```bash
 # Launch the test node (application layer)
+source /opt/ros/humble/setup.bash
 cd ros2
 source install/setup.bash
 ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe

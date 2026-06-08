@@ -75,13 +75,9 @@ if !errorlevel! neq 0 (
     goto :error_end
 )
 
-:: ================= 自动化无痕修复软链接 =================
 echo [Info] Auto-fixing Linux symlinks for Windows host...
-:: 修复 x86_64 目录
 docker exec %CONTAINER_NAME% /bin/bash -c "cd /workspace/rysen_sdk/lib/x86_64 2>/dev/null && rm -f librysen_sdk.so librysen_sdk.so.1 && ln -s librysen_sdk.so.1.* librysen_sdk.so.1 && ln -s librysen_sdk.so.1 librysen_sdk.so"
-:: 修复 aarch64 目录
 docker exec %CONTAINER_NAME% /bin/bash -c "cd /workspace/rysen_sdk/lib/aarch64 2>/dev/null && rm -f librysen_sdk.so librysen_sdk.so.1 && ln -s librysen_sdk.so.1.* librysen_sdk.so.1 && ln -s librysen_sdk.so.1 librysen_sdk.so"
-:: ===================================================================
 
 echo [Success] Container started. Enter the environment with:
 echo    docker exec -it %CONTAINER_NAME% /bin/bash
