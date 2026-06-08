@@ -61,9 +61,69 @@
 
 ---
 
-## 🚀 快速开始
+## 🚀 快速开始 (推荐)
 
-### 🛠️ C++
+强烈推荐使用我们提供的智能环境启动脚本。该脚本会自动侦测您的系统架构（amd64 / arm64），并按最优策略（本地缓存 -> GHCR 云端 -> 离线 Tar 包 -> 源码构建）为您准备好包含所有依赖的 Docker 容器。
+
+### 1. 一键启动开发环境
+
+**🐧 Linux / macOS 用户:**
+
+```bash
+# 在仓库根目录下执行
+chmod +x ./scripts/start_env.sh
+./scripts/start_env.sh
+
+```
+
+**🪟 Windows 用户:**
+直接双击根目录下的 `./scripts/start_env.bat` 文件，或在命令行中执行：
+
+```cmd
+./scripts/start_env.bat
+
+```
+
+> **📦 离线/弱网环境部署说明 (必看)**：
+> 如果您所在的设备（如机器人内部的工控机）无法连接外网，或拉取镜像极其缓慢：
+> 1. 请前往本仓库的 [Releases 页面](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1)下载对应的离线镜像包：
+> * x86_64 设备（PC/服务器）请下载：`rysen_sdk_image.tar`
+> * ARM64 设备（树莓派/Jetson等）请下载：`rysen_sdk_arm64_image.tar`
+> 
+> 
+> 2. 将下载好的 `.tar` 文件放置在仓库的**根目录**下。
+> 3. 再次运行启动脚本，脚本会自动侦测并极速加载离线包！
+> 
+> 
+
+### 2. 开始使用
+
+启动成功后，脚本会自动引导您进入 `rysen_sdk_env` 容器的 `/workspace` 目录。在容器内，您可以直接运行任何 C++、Python 或 ROS2 示例，所有依赖均已就绪。
+
+---
+
+## 💻 本地裸机开发指南
+
+如果您不想使用 Docker，希望直接在宿主机系统上进行原生开发，请按照以下步骤配置您的本地环境。
+
+### 📌 系统与依赖要求
+
+* **操作系统**: Linux (强烈推荐 Ubuntu 22.04)
+* **编译器**: GCC 9+ / Clang 10+ (支持 C++17), CMake 3.10+
+* **环境要求**: Python 3.10, ROS2 Humble (如需使用对应模块)
+
+**快速安装依赖（仅限 Ubuntu）**:
+
+```bash
+# 在根目录下运行一键安装脚本
+chmod +x install_rysen_deps.sh
+./install_rysen_deps.sh
+
+```
+
+*(注：该脚本会自动安装 Boost, libserialport, spdlog, fmt, yaml-cpp 等必需库。)*
+
+### 🛠️ 运行 C++ 示例
 
 ```bash
 cd cpp
@@ -114,58 +174,6 @@ ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
 > * [ros2/rysen_apexhand/README.md](ros2/rysen_apexhand/README.md) - ROS2 节点使用说明
 > 
 > 
-
----
-
-### 🐳 Docker 环境
-
-```bash
-# linux (x86_64)
-cd docker
-docker compose -f docker-compose.yml up -d
-docker exec -it rysen_sdk_env /bin/bash
-```
-
-```bash
-# linux (aarch64)
-cd docker
-docker compose -f docker-compose.arm64.yml up -d
-docker exec -it rysen_sdk_arm64_env /bin/bash
-```
-
-> 💡 详细说明请参考 [docker/README.md](docker/README.md)。
-
----
-
-## 💻 系统要求
-
-### 📌 基础要求
-
-* **操作系统**: Linux (Ubuntu 22.04 推荐)
-* **依赖库**: 
-  * Boost (`libboost-all-dev`) 
-  * libserialport (`libserialport-dev`), 
-  * spdlog (`libspdlog-dev`), 
-  * fmt (`libfmt-dev`), 
-  * yaml-cpp (`libyaml-cpp-dev`)
-
-### 🔧 依赖安装
-
-**快速安装（推荐）**:
-
-```bash
-# 在根目录下
-chmod +x install_rysen_deps.sh
-./install_rysen_deps.sh
-```
-
-> ℹ️ 该脚本会自动安装所有必需的依赖库。如果已安装部分依赖，脚本会跳过已安装的包。
-
-### 🧩 其他要求
-
-* **C++ 示例**: GCC 9+ 或 Clang 10+ (支持 C++17), CMake 3.10+
-* **Python 示例**: Python 3.10
-* **ROS2 示例**: ROS2 Humble
 
 ---
 
@@ -220,5 +228,3 @@ chmod +x install_rysen_deps.sh
 ## 📬 联系我们
 
 如果您有任何疑问，可以通过 support@rysen.com 联系我们。
-
-

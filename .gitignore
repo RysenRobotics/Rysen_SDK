@@ -42,3 +42,6 @@ Thumbs.db
 # Docker 文件（不相关的docker文件）
 docker/docker-compose.arm64.pi.yml
 docker/Dockerfile.cross_arm64
+
+# .tar文件（Docker images）
+*.tar
