@@ -85,7 +85,6 @@ echo ===================================================
 echo Enter the environment with:
 echo docker exec -it %CONTAINER_NAME% /bin/bash
 echo ===================================================
-:: 成功时也暂停，确保终端不退出
 pause
 goto :eof
 
