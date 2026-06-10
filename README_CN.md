@@ -65,6 +65,15 @@
 
 强烈推荐使用我们提供的智能环境启动脚本。该脚本会自动侦测您的系统架构（amd64 / arm64），并按最优策略（本地缓存 -> GHCR 云端 -> 离线 Tar 包 -> 源码构建）为您准备好包含所有依赖的 Docker 容器。
 
+### 0. 必备前提：安装并运行 Docker
+
+在执行启动脚本之前，**必须确保您的系统中已安装与您处理器架构相匹配的 Docker，并且 Docker 后台服务（Daemon）正在运行。**
+
+* **🪟 Windows 用户**:
+  1. 前往 Docker Desktop 官网(https://www.docker.com/products/docker-desktop/) 下载安装包。请务必下载与您电脑芯片架构相匹配的版本（常见的 Intel/AMD 电脑请使用默认的 x86_64（AMD） 版本；如果您使用的是基于骁龙等 ARM 处理器的 Windows 电脑，请选择 ARM 版本）。
+  > 💡可以Win + R打开命令行，输入 echo %PROCESSOR_ARCHITECTURE% 查看处理器架构
+  2. 安装完成后，在开始菜单找到 **Docker Desktop** 并打开它。
+
 ### 1. 一键启动开发环境
 
 **🐧 Linux / macOS 用户:**
@@ -77,7 +86,7 @@ chmod +x ./scripts/start_env.sh
 ```
 
 **🪟 Windows 用户:**
-直接双击根目录下的 `./scripts/start_env.bat` 文件，或在命令行中执行：
+请打开命令提示符（CMD）或 PowerShell，使用 cd 命令进入本仓库的根目录后，执行以下命令（请勿直接双击脚本文件，以免窗口闪退无法查看启动日志）：
 
 ```cmd
 ./scripts/start_env.bat
@@ -87,7 +96,7 @@ chmod +x ./scripts/start_env.sh
 > **📦 离线/弱网环境部署说明 (必看)**：
 > 如果您所在的设备（如机器人内部的工控机）无法连接外网，或拉取镜像极其缓慢：
 > 1. 请前往本仓库的 [Releases 页面](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1)下载对应的离线镜像包：
-> * x86_64 设备（PC/服务器）请下载：`rysen_sdk_image.tar`
+> * x86_64 设备（PC/服务器）请下载：`rysen_sdk_amd64_image.tar`
 > * ARM64 设备（树莓派/Jetson等）请下载：`rysen_sdk_arm64_image.tar`
 > 
 > 
@@ -229,4 +238,4 @@ ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
 
 ## 📬 联系我们
 
-如果您有任何疑问，可以通过 support@rysen.com 联系我们。
+如果您有任何疑问，可以通过 support@rysenbot.com 联系我们。
