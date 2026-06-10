@@ -65,6 +65,16 @@ This repository provides library files for Rysen ApexHand (including x86_64 and 
 
 We highly recommend using our provided intelligent environment startup script. This script automatically detects your system architecture (amd64 / arm64) and prepares a Docker container with all dependencies following an optimal strategy (local cache -> GHCR cloud -> offline Tar package -> source code build).
 
+### 0. Prerequisite: Install and Run Docker
+
+Before executing the startup script, ensure that Docker matching your processor architecture is installed on your system and the Docker Daemon is running.
+
+* **🪟 Windows Users**:
+  1. Go to the Docker Desktop official website (https://www.docker.com/products/docker-desktop/) to download the installation package. Be sure to download the version matching your computer's chip architecture (for common Intel/AMD computers, use the default x86_64 (AMD) version; if you are using a Windows computer based on ARM processors such as Snapdragon, select the ARM version).
+  > 💡You can press Win + R to open the command line, then enter echo %PROCESSOR_ARCHITECTURE% to check the processor architecture
+  2. After installation, find Docker Desktop in the Start Menu and open it.
+
+
 ### 1. One-click Launch of Development Environment
 
 **🐧 Linux / macOS Users:**
@@ -76,7 +86,7 @@ chmod +x ./scripts/start_env.sh
 ```
 
 **🪟 Windows Users:**
-Double-click the `./scripts/start_env.bat` file in the root directory directly, or execute it in the command line:
+Please open Command Prompt (CMD) or PowerShell, use the cd command to enter the root directory of this repository, then execute the following command (do not double-click the script file directly to avoid window crash and inability to view startup logs):
 
 ```cmd
 ./scripts/start_env.bat
@@ -85,7 +95,7 @@ Double-click the `./scripts/start_env.bat` file in the root directory directly, 
 > **📦 Deployment Instructions for Offline/Low-Network Environments (Must Read)**:
 > If the device you are using (such as the industrial computer inside a robot) cannot connect to the external network, or pulling the image is extremely slow:
 > 1. Please go to the [Releases page](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1) of this repository to download the corresponding offline image package:
-> * For x86_64 devices (PC/Server), download: `rysen_sdk_image.tar`
+> * For x86_64 devices (PC/Server), download: `rysen_sdk_amd64_image.tar`
 > * For ARM64 devices (Raspberry Pi/Jetson, etc.), download: `rysen_sdk_arm64_image.tar`
 > 
 > 2. Place the downloaded `.tar` file in the **root directory** of the repository.
@@ -217,4 +227,4 @@ When building C++ or ROS 2 projects, the CMake script will automatically identif
 * **Docker Environment**: Refer to [docker/README.md](docker/README.md)
 
 ## 📬 Contact us
-For any questions, please contact support@rysen.com
+For any questions, please contact support@rysenbot.com
