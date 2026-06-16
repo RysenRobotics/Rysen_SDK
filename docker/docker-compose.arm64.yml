@@ -1,10 +1,9 @@
 services:
   rysen_sdk:
     platform: linux/arm64
-    # build:
-    #   context: ..
-    #   dockerfile: docker/Dockerfile.rysen_sdk.arm64
-    pull_policy: never
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rysen_sdk.arm64
     image: rysen_sdk:arm64
     container_name: rysen_sdk_arm64_env
    # 实时系统关键配置

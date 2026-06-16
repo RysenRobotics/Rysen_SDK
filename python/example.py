@@ -33,6 +33,7 @@ import os
 import signal
 import sys
 import time
+import argparse  # 新增引入 argparse
 from typing import List
 
 from rysen_apexhand_sdk import (
@@ -95,6 +96,12 @@ def main():
     """
     global running
 
+    # 解析命令行参数
+    parser = argparse.ArgumentParser(description="Rysen ApexHand SDK Python Example")
+    parser.add_argument("--ip", type=str, default="192.168.0.102", help="Device IP address")
+    args = parser.parse_args()
+    device_ip = args.ip
+
     # Register signal handler for Ctrl+C / 注册 Ctrl+C 信号处理函数
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -126,7 +133,6 @@ def main():
     # Connect to device / 连接设备
     # Note: Connection is required before receiving data / 注意：需要先连接才能接收数据
     print("\n=== 连接设备 ===")
-    device_ip = "192.168.0.102"  # Modify to your device IP / 可以修改为你的设备IP
     print(f"正在连接到设备: {device_ip}")
 
     ret = sdk.connect(device_ip, ConnectionType.CONNECTION_TYPE_ETHERNET)

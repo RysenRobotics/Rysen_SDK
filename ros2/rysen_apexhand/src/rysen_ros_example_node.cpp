@@ -485,7 +485,15 @@ int main(int argc, char* argv[]) {
     executor.add_node(g_node);
     std::thread spin_thread([&executor]() { executor.spin(); });
 
+    // 解析命令行参数以获取 IP
     std::string device_ip = DEFAULT_DEVICE_IP;
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--ip" && i + 1 < argc) {
+            device_ip = argv[i + 1];
+            i++;
+        }
+    }
+
     std::string raw_topic_prefix = "rysen/apexhand/ip_" + device_ip;
     std::replace(raw_topic_prefix.begin(), raw_topic_prefix.end(), '.', '_');
     std::string device_topic_prefix = raw_topic_prefix;  // Default topic prefix
