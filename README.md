@@ -4,7 +4,7 @@
 
 # 🦾 Rysen ApexHand SDK
 
-This repository provides library files for Rysen ApexHand (including x86_64 and aarch64 architectures) as well as operational examples using C++, Python, and ROS2. These examples demonstrate how to use the SDK's APIs.
+This repository provides library files for Rysen ApexHand (including x86_64 and aarch64 architectures) as well as operation examples using C++, Python, and ROS2, demonstrating how to use the SDK's APIs.
 
 ## 📁 Repository Structure
 
@@ -29,7 +29,6 @@ This repository provides library files for Rysen ApexHand (including x86_64 and 
 │   ├── README.md
 │   ├── rysen_apexhand_sdk.py
 │   └── setup.py
-├── README_CN.md
 ├── README.md
 ├── ros2
 │   ├── rysen_apexhand
@@ -63,17 +62,11 @@ This repository provides library files for Rysen ApexHand (including x86_64 and 
 
 ## 🚀 Quick Start (Recommended)
 
-We highly recommend using our provided intelligent environment startup script. This script automatically detects your system architecture (amd64 / arm64) and prepares a Docker container with all dependencies following an optimal strategy (local cache -> GHCR cloud -> offline Tar package -> source code build).
+We highly recommend using the intelligent environment startup script we provide. This script automatically detects your system architecture (amd64 / arm64) and prepares a Docker container with all dependencies for you according to the optimal strategy (local cache -> GHCR cloud -> offline Tar package -> source code build).
 
 ### 0. Prerequisite: Install and Run Docker
 
-Before executing the startup script, ensure that Docker matching your processor architecture is installed on your system and the Docker Daemon is running.
-
-* **🪟 Windows Users**:
-  1. Go to the Docker Desktop official website (https://www.docker.com/products/docker-desktop/) to download the installation package. Be sure to download the version matching your computer's chip architecture (for common Intel/AMD computers, use the default x86_64 (AMD) version; if you are using a Windows computer based on ARM processors such as Snapdragon, select the ARM version).
-  > 💡You can press Win + R to open the command line, then enter echo %PROCESSOR_ARCHITECTURE% to check the processor architecture
-  2. After installation, find Docker Desktop in the Start Menu and open it.
-
+Before executing the startup script, **ensure that Docker matching your processor architecture is installed in your system and the Docker background service (Daemon) is running.**
 
 ### 1. One-click Launch of Development Environment
 
@@ -85,18 +78,18 @@ chmod +x ./scripts/start_env.sh
 ./scripts/start_env.sh
 ```
 
-**🪟 Windows Users:**
-Please open Command Prompt (CMD) or PowerShell, use the cd command to enter the root directory of this repository, then execute the following command (do not double-click the script file directly to avoid window crash and inability to view startup logs):
+**🪟 Windows Users (⚠️ Not Recommended, for Compilation/Interface Experience Only):**
+Please go to the Docker Desktop official website to download and install the Docker version suitable for your processor architecture, and ensure that the tray icon in the lower right corner displays "Engine running". Due to network latency issues, it is not recommended to perform physical hardware debugging on Windows.
 
 ```cmd
 ./scripts/start_env.bat
 ```
 
-> **📦 Deployment Instructions for Offline/Low-Network Environments (Must Read)**:
-> If the device you are using (such as the industrial computer inside a robot) cannot connect to the external network, or pulling the image is extremely slow:
+> **📦 Offline/Low-Network Environment Deployment Instructions (Must Read)**:
+> If the device you are using (such as the industrial computer inside the robot) cannot connect to the external network, or pulling the image is extremely slow:
 > 1. Please go to the [Releases page](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1) of this repository to download the corresponding offline image package:
-> * For x86_64 devices (PC/Server), download: `rysen_sdk_amd64_image.tar`
-> * For ARM64 devices (Raspberry Pi/Jetson, etc.), download: `rysen_sdk_arm64_image.tar`
+> * For x86_64 devices (PC/Server): download `rysen_sdk_amd64_image.tar`
+> * For ARM64 devices (Raspberry Pi/Jetson, etc.): download `rysen_sdk_arm64_image.tar`
 > 
 > 2. Place the downloaded `.tar` file in the **root directory** of the repository.
 > 3. Run the startup script again, and the script will automatically detect and load the offline package at high speed!
@@ -134,46 +127,63 @@ cd cpp
 mkdir build && cd build
 cmake ..
 make
-./bin/rysen_example
+# Note: Change the IP to the actual IP of the connected robotic hand
+./bin/rysen_example --ip 192.168.0.102
 ```
 
 > 💡 For detailed instructions, please refer to [cpp/README.md](cpp/README.md).
 
 ### 🐍 Python
-
+⚠️ Note: Be sure to use the python3 command to execute the script to avoid syntax errors caused by environment or version conflicts.
 ```bash
 cd python
 pip install -e .
-python example.py
+# Note: Change the IP to the actual IP of the connected robotic hand
+python3 example.py --ip 192.168.0.102
 ```
 
 > 💡 For detailed instructions, please refer to [python/README.md](python/README.md).
 
 ### 🐢 ROS2
 
+Running ROS2 requires opening two terminals at the same time: one for starting the underlying communication server node, and the other for the client test node that sends control commands.
+>💡 Command to enter the docker container from a normal terminal:
+```bash
+# If you are not using docker and running the program on the host machine, no need to execute this
+docker exec -it rysen_sdk_env bash
+```
+Compile the workspace (required only for the first time):
 ```bash
 source /opt/ros/humble/setup.bash
 cd ros2
 colcon build
-source install/setup.bash
-
-# Launch the main control node (driver layer)
-ros2 launch rysen_apexhand rysen_apexhand.launch.py
 ```
 
+【Terminal 1】: Start the main control node (server node / driver layer)
+This node is responsible for establishing actual network communication with the hardware.
 ```bash
-# Launch the test node (application layer)
 source /opt/ros/humble/setup.bash
 cd ros2
 source install/setup.bash
-ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
+# Start the main control node (driver layer)
+ros2 launch rysen_apexhand rysen_apexhand.launch.py
+```
+【Terminal 2】: Start the test node (client node / application layer)
+Keep Terminal 1 running and open a new terminal. This node is responsible for sending motion commands and receiving status feedback.
+```bash
+# Start the test node (application layer)
+source /opt/ros/humble/setup.bash
+cd ros2
+source install/setup.bash
+# Note: Change the IP to the actual IP of the connected robotic hand
+ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe --ip 192.168.0.102
 ```
 
 **Features**:
 
-* Publishes joint states and subscribes to follow control using standard ROS2 message type (`sensor_msgs/JointState`)
-* Provides position control service (`MoveJoint`) and finger enable service (`SetFingerEnabled`)
-* Publishes motor status and tactile sensor data
+* Publish joint states and subscribe to follow control using standard ROS2 message types (`sensor_msgs/JointState`)
+* Provide position control service (`MoveJoint`) and finger enable service (`SetFingerEnabled`)
+* Publish motor status and tactile sensor data
 
 > 📖 **For detailed instructions, please refer to**:
 > * [ros2/rysen_apexhand_msgs/README.md](ros2/rysen_apexhand_msgs/README.md) - Message and service definitions
@@ -185,9 +195,17 @@ ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
 
 > ⚠️ All example programs use **Ethernet** connection by default (ensure the local address and the device address are in the same network segment: `192.168.0.xxx`).
 
-> **Default IP Address**: `192.168.0.102` (can be modified in the code, specific locations are in `cpp/rysen_example.cpp`,
-`python/example.py`,
-`ros2/rysen_apexhand/src/rysen_ros_example_node.cpp`)
+> **🔧 Host Network Settings Tutorial**:
+> Please follow the steps below to configure your host's wired network card to the 192.168.0.x network segment:
+> Physically connect the robotic hand to the host's wired network port via an Ethernet cable.
+> 1. Open Ubuntu's Settings -> Network -> Find your Wired connection and click the gear settings icon.
+> 
+> 2. Switch to the IPv4 tab.
+> 3. Change the IPv4 method from "Automatic (DHCP)" to Manual.
+> 4. Fill in the following information in the address bar:
+> Address: 192.168.0.50 (or any 192.168.0.x address except the IP of the connected dexterous hand)
+> Netmask: 255.255.255.0
+> 5. Click "Apply" in the upper right corner, then turn off and on the network switch to make the settings take effect.
 
 **Notes**:
 1. Ensure the robot and the host are in the same network.
@@ -200,7 +218,7 @@ ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
     # Delete the fake links damaged by Windows
     rm librysen_sdk.so librysen_sdk.so.1
 
-    # Re-establish native Linux soft links
+    # Re-establish the native Linux soft links
     ln -s librysen_sdk.so.1.x.x librysen_sdk.so.1
     ln -s librysen_sdk.so.1 librysen_sdk.so
     ```
@@ -209,22 +227,26 @@ ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
 
 ## 📦 SDK Library File Description
 
-This project provides a unified `rysen_sdk/` directory in the root directory, and all example programs dynamically link to the library files here:
+This project provides a unified `rysen_sdk/` directory in the root directory, and all example programs are dynamically linked to the library files here:
 
 * `rysen_sdk/include/` - C++ header files of the SDK
 * `rysen_sdk/lib/x86_64/` - Dynamic link libraries suitable for ordinary PC/server platforms
 * `rysen_sdk/lib/aarch64/` - Dynamic link libraries suitable for ARM edge computing platforms such as Raspberry Pi and NVIDIA Jetson
 
 **🧠 Intelligent Architecture Routing**:
-When building C++ or ROS 2 projects, the CMake script will automatically identify the physical architecture of the current system (`uname -m`) and intelligently and seamlessly link to the `librysen_sdk.so` in the directory corresponding to the platform. Developers do not need to modify the path manually.
+When building C++ or ROS 2 projects, the CMake script will automatically identify the physical architecture of the current system (`uname -m`) and intelligently and seamlessly link the `librysen_sdk.so` in the directory of the corresponding platform. Developers do not need to modify the path manually.
 
 ---
 
 ## 📚 More Information
-* **C++ API Documentation**: Refer to comments in [cpp/README.md](cpp/README.md) and `cpp/rysen_example.cpp`
+
+* **C++ API Documentation**: Refer to the comments in [cpp/README.md](cpp/README.md) and `cpp/rysen_example.cpp`
 * **Python API Documentation**: Refer to [python/README.md](python/README.md)
 * **ROS2 API Documentation**: Refer to [ros2/rysen_apexhand/README.md](ros2/rysen_apexhand/README.md)
 * **Docker Environment**: Refer to [docker/README.md](docker/README.md)
 
-## 📬 Contact us
-For any questions, please contact support@rysenbot.com
+---
+
+## 📬 Contact Us
+
+If you have any questions, you can contact us at support@rysenbot.com.

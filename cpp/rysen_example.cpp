@@ -47,9 +47,18 @@ void SignalHandler(int sig) {
  * @brief Main function / 主函数
  * @return 0 on success, 1 on error / 成功返回 0，失败返回 1
  */
-int main([[maybe_unused]] int argc, char** argv) {
+int main(int argc, char** argv) {
     // Register signal handler for Ctrl+C / 注册 Ctrl+C 信号处理函数
     signal(SIGINT, SignalHandler);
+
+    // 解析命令行参数以获取 IP
+    std::string device_ip = "192.168.0.102";  // 默认 IP
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--ip" && i + 1 < argc) {
+            device_ip = argv[i + 1];
+            i++;
+        }
+    }
 
     // Create SDK instance / 创建 SDK 实例
     std::cout << "\n=== 创建 SDK 实例 ===" << std::endl;
@@ -84,7 +93,6 @@ int main([[maybe_unused]] int argc, char** argv) {
     // Connect to device / 连接设备
     // Note: Connection is required before receiving data / 注意：需要先连接才能接收数据
     std::cout << "\n=== 连接设备 ===" << std::endl;
-    std::string device_ip = "192.168.0.102";  // Modify to your device IP / 可以修改为你的设备IP
     std::cout << "正在连接到设备: " << device_ip << std::endl;
 
     auto ret = sdk.Connect(device_ip, rysen::ConnectionType::CONNECTION_TYPE_ETHERNET);

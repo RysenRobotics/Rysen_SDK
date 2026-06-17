@@ -69,10 +69,6 @@
 
 在执行启动脚本之前，**必须确保您的系统中已安装与您处理器架构相匹配的 Docker，并且 Docker 后台服务（Daemon）正在运行。**
 
-* **🪟 Windows 用户**:
-  1. 前往 Docker Desktop 官网(https://www.docker.com/products/docker-desktop/) 下载安装包。请务必下载与您电脑芯片架构相匹配的版本（常见的 Intel/AMD 电脑请使用默认的 x86_64（AMD） 版本；如果您使用的是基于骁龙等 ARM 处理器的 Windows 电脑，请选择 ARM 版本）。
-  > 💡可以Win + R打开命令行，输入 echo %PROCESSOR_ARCHITECTURE% 查看处理器架构
-  2. 安装完成后，在开始菜单找到 **Docker Desktop** 并打开它。
 
 ### 1. 一键启动开发环境
 
@@ -85,8 +81,8 @@ chmod +x ./scripts/start_env.sh
 
 ```
 
-**🪟 Windows 用户:**
-请打开命令提示符（CMD）或 PowerShell，使用 cd 命令进入本仓库的根目录后，执行以下命令（请勿直接双击脚本文件，以免窗口闪退无法查看启动日志）：
+**🪟 Windows 用户 (⚠️ 极不推荐，仅供编译/接口体验):**
+请前往 Docker Desktop 官网下载并安装符合您处理器架构的Docker版本，并确保右下角托盘图标显示 "Engine running"。由于网络延迟问题，不建议在 Windows 上进行实机硬件联调。
 
 ```cmd
 ./scripts/start_env.bat
@@ -139,39 +135,56 @@ cd cpp
 mkdir build && cd build
 cmake ..
 make
-./bin/rysen_example
+#注意ip改为实际连接的机械手ip
+./bin/rysen_example --ip 192.168.0.102
 ```
 
 > 💡 详细说明请参考 [cpp/README.md](cpp/README.md)。
 
 ### 🐍 Python
-
+⚠️ 注意：请务必使用 python3 命令执行脚本，以避免环境或版本冲突导致的语法报错。
 ```bash
 cd python
 pip install -e .
-python example.py
+#注意ip改为实际连接的机械手ip
+python3 example.py --ip 192.168.0.102
 ```
 
 > 💡 详细说明请参考 [python/README.md](python/README.md)。
 
 ### 🐢 ROS2
 
+ROS2 的运行需要同时开启两个终端，一个用于启动底层通信服务器节点，另一个用于发送控制指令的客户端测试节点。
+>💡普通终端进入docker容器的命令：
+```bash
+#如果你没有用docker，而是在宿主机运行的程序，无需执行
+docker exec -it rysen_sdk_env bash
+```
+编译工作空间（仅首次需要）:
 ```bash
 source /opt/ros/humble/setup.bash
 cd ros2
 colcon build
-source install/setup.bash
+```
 
+【终端 1】：启动主控制节点 (服务器节点 / 驱动层)
+此节点负责与硬件建立实际的网络通信。
+```bash
+source /opt/ros/humble/setup.bash
+cd ros2
+source install/setup.bash
 # 启动主控制节点 (驱动层)
 ros2 launch rysen_apexhand rysen_apexhand.launch.py
 ```
-
+【终端 2】：启动测试节点 (客户端节点 / 应用层)
+保持终端 1 运行，新建一个终端。此节点负责发送运动指令并接收状态反馈。
 ```bash
 # 启动测试节点 (应用层)
 source /opt/ros/humble/setup.bash
 cd ros2
 source install/setup.bash
-ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
+#注意ip改为实际连接的机械手ip
+ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe --ip 192.168.0.102
 ```
 
 **特性**:
@@ -192,10 +205,21 @@ ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe
 
 > ⚠️ 所有示例程序默认使用 **Ethernet** 连接方式（保证本机地址与设备地址在同一个网段：`192.168.0.xxx`）。
 
-> **默认 IP 地址**: `192.168.0.102`（可在代码中修改，具体位置在 `cpp/rysen_example.cpp`，
-`python/example.py`，
-`ros2/rysen_apexhand/src/rysen_ros_example_node.cpp`）
-
+> **🔧 宿主机网络设置教程**：
+> 请按照以下步骤，将您的宿主机有线网卡配置到 192.168.0.x 网段：
+> 将机械手通过网线物理连接至主机的有线网口。
+> 1. 打开 Ubuntu 的 设置 (Settings) -> 网络 (Network) -> 找到您的 有线连接 (Wired) 并点击齿轮设置图标。
+> 
+> 
+> 2. 切换到 IPv4 标签页。
+> 3. 将 IPv4 方法从“自动(DHCP)”更改为 手动 (Manual)。
+> 4. 在地址栏中填入以下信息：
+> 地址 (Address): 192.168.0.50 （或除连接灵巧手ip外的任意 192.168.0.x 地址）
+> 子网掩码 (Netmask): 255.255.255.0
+> 5. 点击右上角的“应用 (Apply)”，然后关闭并重新打开网络开关使设置生效。
+>
+>
+                   
 **注意事项**:
 1. 确保机器人和主机在同一网络中。
 2. 防火墙允许相关端口通信。
