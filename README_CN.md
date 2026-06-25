@@ -6,6 +6,12 @@
 
 本仓库提供 Rysen Apexhand 的库文件（包含 x86_64 架构和 aarch64 架构）以及提供 C++、Python 和 ROS2 三种使用方式的操作示例，演示怎么使用 sdk 的 API。
 
+> 🚨 **出厂默认 IP 地址重要提示 (必看)**：
+> * **右手**: `192.168.0.103`
+> * **左手**: `192.168.0.102`
+>
+> *下文所有的示例代码均默认以**右手 (`192.168.0.103`)** 为例。如果您购买的是左手，请在运行测试命令时，将对应的 IP 替换为 `192.168.0.102`。*
+
 ## 📁 仓库结构
 
 ```
@@ -135,8 +141,8 @@ cd cpp
 mkdir build && cd build
 cmake ..
 make
-#注意ip改为实际连接的机械手ip
-./bin/rysen_example --ip 192.168.0.102
+# 默认演示连接右手(103)。如使用左手，请更改为 192.168.0.102
+./bin/rysen_example --ip 192.168.0.103
 ```
 
 > 💡 详细说明请参考 [cpp/README.md](cpp/README.md)。
@@ -146,8 +152,8 @@ make
 ```bash
 cd python
 pip install -e .
-#注意ip改为实际连接的机械手ip
-python3 example.py --ip 192.168.0.102
+# 默认演示连接右手(103)。如使用左手，请更改为 192.168.0.102
+python3 example.py --ip 192.168.0.103
 ```
 
 > 💡 详细说明请参考 [python/README.md](python/README.md)。
@@ -183,8 +189,8 @@ ros2 launch rysen_apexhand rysen_apexhand.launch.py
 source /opt/ros/humble/setup.bash
 cd ros2
 source install/setup.bash
-#注意ip改为实际连接的机械手ip
-ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe --ip 192.168.0.102
+# 默认演示连接右手(103)。如使用左手，请更改为 192.168.0.102
+ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe --ip 192.168.0.103
 ```
 
 **特性**:
