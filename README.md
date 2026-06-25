@@ -6,6 +6,12 @@
 
 This repository provides library files for Rysen ApexHand (including x86_64 and aarch64 architectures) as well as operation examples using C++, Python, and ROS2, demonstrating how to use the SDK's APIs.
 
+> 🚨 **Important Note on Default IP Addresses (Must Read)**：
+> * **Right Hand**: `192.168.0.103`
+> * **Left Hand**: `192.168.0.102`
+>
+> *All example codes below use the **Right Hand (`192.168.0.103`)** by default. If you purchased the Left Hand, replace the corresponding IP with `192.168.0.102` when running test commands.*
+
 ## 📁 Repository Structure
 
 ```
@@ -127,8 +133,8 @@ cd cpp
 mkdir build && cd build
 cmake ..
 make
-# Note: Change the IP to the actual IP of the connected robotic hand
-./bin/rysen_example --ip 192.168.0.102
+# Defaults to connecting to the right hand (103). For left hand, change to 192.168.0.102
+./bin/rysen_example --ip 192.168.0.103
 ```
 
 > 💡 For detailed instructions, please refer to [cpp/README.md](cpp/README.md).
@@ -138,8 +144,8 @@ make
 ```bash
 cd python
 pip install -e .
-# Note: Change the IP to the actual IP of the connected robotic hand
-python3 example.py --ip 192.168.0.102
+# Defaults to connecting to the right hand (103). For left hand, change to 192.168.0.102
+python3 example.py --ip 192.168.0.103
 ```
 
 > 💡 For detailed instructions, please refer to [python/README.md](python/README.md).
@@ -175,8 +181,8 @@ Keep Terminal 1 running and open a new terminal. This node is responsible for se
 source /opt/ros/humble/setup.bash
 cd ros2
 source install/setup.bash
-# Note: Change the IP to the actual IP of the connected robotic hand
-ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe --ip 192.168.0.102
+# Defaults to connecting to the right hand (103). For left hand, change to 192.168.0.102
+ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe --ip 192.168.0.103
 ```
 
 **Features**:
