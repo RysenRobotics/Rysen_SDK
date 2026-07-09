@@ -41,7 +41,7 @@ else:
     print(f"🔧 开发/元数据模式：跳过同步动态库...")
 
 # Read version from VERSION file (single source of truth), fallback to __init__.py, then default
-version = "1.4.4"  # Default fallback version (updated by update_version.sh)
+version = "1.4.6"  # Default fallback version (updated by update_version.sh)
 try:
     # First try to read from VERSION file (project root)
     version_file = os.path.join(here, "..", "..", "VERSION")

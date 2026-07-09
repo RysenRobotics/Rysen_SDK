@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rysen_apexhand</name>
-  <version>1.4.4</version>
+  <version>1.4.6</version>
   <description>ROS2 interface for Rysen ApexHand dexterous hand</description>
   <maintainer email="support@rysen.com">Rysen Team</maintainer>
   <license>BSD-3-Clause</license>
@@ -15,6 +15,8 @@
   <depend>geometry_msgs</depend>
   <depend>builtin_interfaces</depend>
   <depend>rysen_apexhand_msgs</depend>
+  <depend>rosbag2_cpp</depend>
+  <depend>rosbag2_storage</depend>
 
   <!-- Optional: used when launch_foxglove_bridge:=true in rysen_apexhand.launch.py -->
   <exec_depend>foxglove_bridge</exec_depend>

@@ -22,6 +22,8 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rysen_apexhand_msgs REQUIRED)
+find_package(rosbag2_cpp REQUIRED)
+find_package(rosbag2_storage REQUIRED)
 
 # Find Rysen SDK (local package)
 set(SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rysen_sdk")
@@ -68,6 +70,7 @@ message(STATUS "Found Rysen SDK: ${SDK_LIB_FILE}")
 # Build the node library
 add_library(${PROJECT_NAME}_node SHARED
   src/rysen_apexhand_node.cpp
+  src/rysen_rosbag_manager.cpp
 )
 
 target_include_directories(${PROJECT_NAME}_node
@@ -87,6 +90,8 @@ ament_target_dependencies(${PROJECT_NAME}_node
   geometry_msgs
   builtin_interfaces
   rysen_apexhand_msgs
+  rosbag2_cpp
+  rosbag2_storage
 )
 
 target_link_libraries(${PROJECT_NAME}_node
@@ -197,6 +202,8 @@ ament_export_dependencies(
   geometry_msgs
   builtin_interfaces
   rysen_apexhand_msgs
+  rosbag2_cpp
+  rosbag2_storage
 )
 
 ament_package()

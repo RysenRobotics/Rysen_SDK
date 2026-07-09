@@ -1,0 +1,6 @@
+string ip
+string folder_path  # 建议传入绝对路径
+float64 frequency   # 录制频率，例如 100.0
+---
+bool success
+string message

@@ -19,6 +19,9 @@ def generate_launch_description() -> LaunchDescription:
     declare_device_ip = DeclareLaunchArgument(
         "device_ip", default_value="192.168.0.102",
         description="Rysen device IP address");
+    declare_log_path = DeclareLaunchArgument(
+        "log_path", default_value="./log",
+        description="Path to save SDK log files");
     declare_frame_id = DeclareLaunchArgument(
         "frame_id", default_value="base_link", description="TF frame id for published messages");
     declare_multi_hand_topic_prefix = DeclareLaunchArgument(
@@ -111,6 +114,7 @@ def generate_launch_description() -> LaunchDescription:
         parameters=[
             {
                 "device_ip": LaunchConfiguration("device_ip"),
+                "log_path": LaunchConfiguration("log_path"),
                 "connection_type": LaunchConfiguration("connection_type"),
                 "auto_connect": LaunchConfiguration("auto_connect"),
                 "auto_enable_on_connect": LaunchConfiguration("auto_enable_on_connect"),
@@ -153,22 +157,34 @@ def generate_launch_description() -> LaunchDescription:
         ],
     )
 
-    foxglove_bridge = IncludeLaunchDescription(
-        AnyLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [FindPackageShare("foxglove_bridge"), "launch", "foxglove_bridge_launch.xml"]
-            )
-        ),
+    foxglove_bridge = Node(
+        package="foxglove_bridge",
+        executable="foxglove_bridge",
+        name="foxglove_bridge",
+        output="screen",
+        emulate_tty=True,
         condition=IfCondition(LaunchConfiguration("launch_foxglove_bridge")),
-        launch_arguments={
-            "port": LaunchConfiguration("foxglove_bridge_port"),
-            "address": LaunchConfiguration("foxglove_bridge_address"),
-        }.items(),
+        # 崩溃自动重启兜底
+        respawn=True,
+        respawn_delay=2.0,
+        parameters=[
+            {
+                "port": LaunchConfiguration("foxglove_bridge_port"),
+                "address": LaunchConfiguration("foxglove_bridge_address"),
+                # 👇 缓冲区与性能优化参数
+                "max_qos_depth": 50,
+                "send_buffer_limit": 20971520,
+                "num_threads": 3,
+            }
+        ],
     )
+
+
 
     return LaunchDescription(
         [
             declare_device_ip,
+            declare_log_path,
             declare_connection_type,
             declare_auto_connect,
             declare_auto_enable_on_connect,

@@ -14,6 +14,7 @@
 #include "rysen_apexhand/rysen_apexhand_node.hpp"
 
 int main(int argc, char** argv) {
+    signal(SIGPIPE, SIG_IGN);
     rclcpp::init(argc, argv);
 
     auto node = std::make_shared<rysen_apexhand::RysenApexHandNode>();
