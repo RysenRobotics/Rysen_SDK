@@ -21,7 +21,7 @@ dist/
 
 # 忽略 Python 运行时的本地 lib 拷贝（因为我们在 setup.py 里做了自动搬运，
 # 真正的库文件在仓库根目录的 rysen_sdk/lib 下保存，这里不需要重复提交）
-python/lib/
+python/lib
 
 # =========================
 # 操作系统与 IDE 缓存

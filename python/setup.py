@@ -31,14 +31,28 @@ local_lib_dst = os.path.join(here, "lib")
 # 如果是 pip install -e .，sys.argv 里面会有 'develop' 或 'egg_info'
 is_packaging = any(arg in sys.argv for arg in ['bdist_wheel', 'sdist'])
 
-# 仅在真实打包时，且源库存在时，才进行拷贝
+# 仅在真实打包时进行深度拷贝，开发模式下使用软链接保持实时同步
 if is_packaging and os.path.exists(sdk_lib_src):
-    print(f"📦 打包模式：正在从统一 SDK 目录同步动态库用于构建 Wheel 包...")
-    if os.path.exists(local_lib_dst):
-        shutil.rmtree(local_lib_dst) # 清理旧的
-    shutil.copytree(sdk_lib_src, local_lib_dst) # 拷贝新的
+    print(f"📦 打包模式：正在从统一 SDK 目录拷贝动态库用于构建 Wheel 包...")
+    if os.path.exists(local_lib_dst) or os.path.islink(local_lib_dst):
+        if os.path.islink(local_lib_dst): 
+            os.unlink(local_lib_dst)
+        else: 
+            shutil.rmtree(local_lib_dst)
+    shutil.copytree(sdk_lib_src, local_lib_dst)
+    
+elif os.path.exists(sdk_lib_src):
+    print(f"🔧 开发模式：正在建立动态库软链接 (实时同步 rysen_sdk/lib)...")
+    if os.path.exists(local_lib_dst) or os.path.islink(local_lib_dst):
+        if os.path.islink(local_lib_dst): 
+            os.unlink(local_lib_dst)
+        else: 
+            shutil.rmtree(local_lib_dst)
+    # 创建指向上一层 rysen_sdk/lib 的软链接
+    os.symlink(sdk_lib_src, local_lib_dst)
+    
 else:
-    print(f"🔧 开发/元数据模式：跳过同步动态库...")
+    print(f"⚠️ 警告：找不到源 SDK 库路径 {sdk_lib_src}")
 
 # Read version from VERSION file (single source of truth), fallback to __init__.py, then default
 version = "1.4.6"  # Default fallback version (updated by update_version.sh)
