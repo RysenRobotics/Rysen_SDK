@@ -39,10 +39,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/GetVersionInfo.srv"
   "srv/RemoveHand.srv"
   "srv/IsFingerEnabled.srv"
-  "srv/StartRecord.srv"
-  "srv/StartPlayback.srv"
-  "srv/StopRecord.srv"
-  "srv/StopPlayback.srv"
   DEPENDENCIES std_msgs sensor_msgs geometry_msgs builtin_interfaces
 )
 

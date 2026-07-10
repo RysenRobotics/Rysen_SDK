@@ -23,7 +23,6 @@
 
 #include "builtin_interfaces/msg/time.hpp"
 #include "rclcpp/rclcpp.hpp"
-#include "rysen_apexhand/rysen_rosbag_manager.hpp"
 #include "rysen_apexhand_data.hpp"
 #include "rysen_apexhand_msgs/msg/hand_tactile_forces.hpp"
 #include "rysen_apexhand_msgs/msg/hardware_errors.hpp"
@@ -42,11 +41,7 @@
 #include "rysen_apexhand_msgs/srv/set_max_finger_torque.hpp"
 #include "rysen_apexhand_msgs/srv/set_max_joint_accel.hpp"
 #include "rysen_apexhand_msgs/srv/set_max_joint_speed.hpp"
-#include "rysen_apexhand_msgs/srv/start_playback.hpp"
-#include "rysen_apexhand_msgs/srv/start_record.hpp"
 #include "rysen_apexhand_msgs/srv/start_tactile_calibration.hpp"
-#include "rysen_apexhand_msgs/srv/stop_playback.hpp"
-#include "rysen_apexhand_msgs/srv/stop_record.hpp"
 #include "rysen_apexhand_sdk.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "std_msgs/msg/header.hpp"
@@ -78,34 +73,9 @@ class RysenApexHandNode : public rclcpp::Node {
         rclcpp::Publisher<rysen_apexhand_msgs::msg::HardwareErrors>::SharedPtr hardware_errors_pub;
     };
 
-    // 1. Bag 管理器实例
-    std::unique_ptr<ApexHandBagManager> bag_manager_;
-
-    // 2. 声明 4 个服务端
-    rclcpp::Service<rysen_apexhand_msgs::srv::StartRecord>::SharedPtr start_record_srv_;
-    rclcpp::Service<rysen_apexhand_msgs::srv::StopRecord>::SharedPtr stop_record_srv_;
-    rclcpp::Service<rysen_apexhand_msgs::srv::StartPlayback>::SharedPtr start_playback_srv_;
-    rclcpp::Service<rysen_apexhand_msgs::srv::StopPlayback>::SharedPtr stop_playback_srv_;
-
-    // 3. 声明 4 个处理函数
-    void HandleStartRecord(
-        const std::shared_ptr<rysen_apexhand_msgs::srv::StartRecord::Request> request,
-        std::shared_ptr<rysen_apexhand_msgs::srv::StartRecord::Response> response);
-    void HandleStopRecord(
-        const std::shared_ptr<rysen_apexhand_msgs::srv::StopRecord::Request> request,
-        std::shared_ptr<rysen_apexhand_msgs::srv::StopRecord::Response> response);
-    void HandleStartPlayback(
-        const std::shared_ptr<rysen_apexhand_msgs::srv::StartPlayback::Request> request,
-        std::shared_ptr<rysen_apexhand_msgs::srv::StartPlayback::Response> response);
-    void HandleStopPlayback(
-        const std::shared_ptr<rysen_apexhand_msgs::srv::StopPlayback::Request> request,
-        std::shared_ptr<rysen_apexhand_msgs::srv::StopPlayback::Response> response);
-
     std::mutex hands_mutex_;
     std::unordered_map<std::string, std::unique_ptr<HandInstance>> hands_;
     std::string default_ip_;
-    // 缓存后端版本号
-    std::string ros_backend_version_;
 
     rclcpp::Service<rysen_apexhand_msgs::srv::RemoveHand>::SharedPtr remove_hand_srv_;
     rclcpp::Service<rysen_apexhand_msgs::srv::Connect>::SharedPtr connect_srv_;

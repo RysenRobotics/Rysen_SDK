@@ -13,7 +13,6 @@
 
 #include <algorithm>
 #include <chrono>
-#include <fstream>
 #include <iomanip>
 #include <memory>
 #include <sstream>
@@ -152,53 +151,6 @@ RysenApexHandNode::RysenApexHandNode(const rclcpp::NodeOptions& options)
     this->declare_parameter<std::string>("startup_hand_ips_csv", "");
     this->declare_parameter<bool>("auto_connect_startup_hands", true);
 
-    // 1. 读取 VERSION 文件
-    std::string version_file_path = "version.yaml";
-    std::ifstream version_file(version_file_path);
-    ros_backend_version_ = "unknown";  // 默认值为 unknown
-
-    if (version_file.is_open()) {
-        std::string line;
-        bool version_found = false;
-
-        // 按行读取文件，防止 version 字段不在第一行
-        while (std::getline(version_file, line)) {
-            line = TrimWhitespace(line);  // 去除整行前后的空格
-
-            std::string key = "version:";
-            // 判断该行是否以 "version:" 开头 (C++11 写法，如果用C++20可以直接用
-            // line.starts_with(key))
-            if (line.rfind(key, 0) == 0) {
-                // 截取 "version:" 后面的内容
-                std::string value = line.substr(key.length());
-                value = TrimWhitespace(value);  // 去除冒号和数值之间的空格
-
-                // 剥离可能存在的双引号或单引号 (比如 "v_1.1.3" -> v_1.1.3)
-                if (!value.empty() && (value.front() == '"' || value.front() == '\'')) {
-                    value.erase(0, 1);
-                }
-                if (!value.empty() && (value.back() == '"' || value.back() == '\'')) {
-                    value.pop_back();
-                }
-
-                ros_backend_version_ = value;
-                version_found = true;
-                break;  // 找到版本号后即可跳出循环
-            }
-        }
-
-        if (version_found) {
-            RCLCPP_INFO(this->get_logger(), "Loaded ROS backend version: %s",
-                        ros_backend_version_.c_str());
-        } else {
-            RCLCPP_WARN(this->get_logger(), "Failed to find 'version:' key in %s",
-                        version_file_path.c_str());
-        }
-    } else {
-        RCLCPP_WARN(this->get_logger(), "Failed to open VERSION file at %s",
-                    version_file_path.c_str());
-    }
-
     joint_names_ = {"thumb_j0",  "thumb_j1", "thumb_j2", "thumb_j3",  "thumb_j4",  "index_j0",
                     "index_j1",  "index_j2", "index_j3", "middle_j0", "middle_j1", "middle_j2",
                     "middle_j3", "ring_j0",  "ring_j1",  "ring_j2",   "ring_j3",   "pinky_j0",
@@ -227,49 +179,6 @@ RysenApexHandNode::RysenApexHandNode(const rclcpp::NodeOptions& options)
     const auto bind2 = [this](auto fn) {
         return std::bind(fn, this, std::placeholders::_1, std::placeholders::_2);
     };
-
-    // --- 1. 实例化 Bag 管理器 ---
-    bag_manager_ = std::make_unique<ApexHandBagManager>(this);
-
-    // --- 2. 注入回播回调 (核心胶水代码) ---
-    bag_manager_->setPlaybackJointCallback(
-        [this](const std::string& ip, const sensor_msgs::msg::JointState& msg) {
-            // 这个函数会在回播线程中被高频调用
-            HandInstance* hand = FindHand(ip);
-            if (!hand || !hand->sdk || !hand->sdk->IsConnected()) {
-                return;  // 如果手不在或者断开了，就不发指令
-            }
-
-            // 将 JointState 转换为 SDK 需要的 MoveJPositionFollowParam
-            std::vector<rysen::MoveJPositionFollowParam> follow_params;
-            for (size_t i = 0; i < msg.name.size(); ++i) {
-                auto it = joint_name_to_id_map_.find(msg.name[i]);
-                if (it != joint_name_to_id_map_.end()) {
-                    rysen::MoveJPositionFollowParam param;
-                    param.id = it->second;
-                    param.position = msg.position[i];
-                    param.torque = kJointBalanceTorque.at(static_cast<size_t>(param.id));
-                    follow_params.push_back(param);
-                }
-            }
-
-            // 直接调用底层 SDK 下发位置
-            if (!follow_params.empty()) {
-                hand->sdk->MoveJPositionFollow(follow_params);
-            }
-        });
-
-    // --- 3. 注册服务 ---
-    // (可以顺便在构造函数最前面通过 declare_parameter 声明这 4 个服务的名字，这里写死作示例)
-    start_record_srv_ = this->create_service<rysen_apexhand_msgs::srv::StartRecord>(
-        "rysen/apexhand/start_record", bind2(&RysenApexHandNode::HandleStartRecord));
-    stop_record_srv_ = this->create_service<rysen_apexhand_msgs::srv::StopRecord>(
-        "rysen/apexhand/stop_record", bind2(&RysenApexHandNode::HandleStopRecord));
-    start_playback_srv_ = this->create_service<rysen_apexhand_msgs::srv::StartPlayback>(
-        "rysen/apexhand/start_playback", bind2(&RysenApexHandNode::HandleStartPlayback));
-    stop_playback_srv_ = this->create_service<rysen_apexhand_msgs::srv::StopPlayback>(
-        "rysen/apexhand/stop_playback", bind2(&RysenApexHandNode::HandleStopPlayback));
-
     remove_hand_srv_ = this->create_service<rysen_apexhand_msgs::srv::RemoveHand>(
         this->get_parameter("remove_hand_service").as_string(),
         bind2(&RysenApexHandNode::HandleRemoveHand));
@@ -512,8 +421,6 @@ rysen::ErrorCode RysenApexHandNode::ConnectToHand(const std::string& ip_norm, in
     if (hand->sdk->IsConnected()) {
         return rysen::ErrorCode::ERROR_CODE_OK;
     }
-    std::string log_path = this->get_parameter("log_path").as_string();
-    hand->sdk->SetLogPath(log_path);
     const rysen::ErrorCode error =
         hand->sdk->Connect(ip_norm, static_cast<rysen::ConnectionType>(connection_type));
     if (error == rysen::ErrorCode::ERROR_CODE_OK) {
@@ -1006,7 +913,6 @@ void RysenApexHandNode::HandleGetVersionInfo(
         response->sdk_version.clear();
         response->hand_firmware_version.clear();
         response->touch_sensor_version.clear();
-        response->teach_controller_version.clear();  // 失败时也清空一下
         RCLCPP_WARN(this->get_logger(), "GetVersionInfo: %s", err.c_str());
         return;
     }
@@ -1014,9 +920,6 @@ void RysenApexHandNode::HandleGetVersionInfo(
     response->sdk_version = version.sdk_version;
     response->hand_firmware_version = version.hand_firmware_version;
     response->touch_sensor_version = version.touch_sensor_version;
-
-    // 直接使用初始化时缓存在内存中的变量
-    response->teach_controller_version = ros_backend_version_;
 }
 
 void RysenApexHandNode::OnMoveJPositionFollowCommand(
@@ -1140,11 +1043,6 @@ void RysenApexHandNode::PublishJointStates(HandInstance* hand, const rysen::Join
         }
     }
     hand->joint_states_pub->publish(*msg);
-
-    // 【新增】将当前构建好的 ROS msg 推给 Bag 管理器的缓存
-    if (bag_manager_) {
-        bag_manager_->writeJointState(hand->ip, *msg);
-    }
 }
 
 void RysenApexHandNode::PublishMotorStates(HandInstance* hand, const rysen::MotorStates& states) {
@@ -1299,56 +1197,6 @@ void RysenApexHandNode::InitializeJointNameMapping() {
         joint_name_to_id_map_[canonical_joint_names[i]] = static_cast<rysen::JointId>(i);
         joint_name_to_id_map_[other_canonical_joint_names[i]] = static_cast<rysen::JointId>(i);
     }
-}
-
-void RysenApexHandNode::HandleStartRecord(
-    const std::shared_ptr<rysen_apexhand_msgs::srv::StartRecord::Request> request,
-    std::shared_ptr<rysen_apexhand_msgs::srv::StartRecord::Response> response) {
-    HandInstance* hand = nullptr;
-    std::string err;
-    if (!ResolveHandForCommand(request->ip, &hand, err)) {
-        response->success = false;
-        response->message = err;
-        return;
-    }
-
-    bool ok = bag_manager_->startRecording(request->ip, request->folder_path, request->frequency);
-    response->success = ok;
-    response->message =
-        ok ? "Recording started" : "Failed to start recording (check path or already recording)";
-}
-
-void RysenApexHandNode::HandleStopRecord(
-    const std::shared_ptr<rysen_apexhand_msgs::srv::StopRecord::Request> request,
-    std::shared_ptr<rysen_apexhand_msgs::srv::StopRecord::Response> response) {
-    bag_manager_->stopRecording(request->ip);
-    response->success = true;
-    response->message = "Recording stopped";
-}
-
-void RysenApexHandNode::HandleStartPlayback(
-    const std::shared_ptr<rysen_apexhand_msgs::srv::StartPlayback::Request> request,
-    std::shared_ptr<rysen_apexhand_msgs::srv::StartPlayback::Response> response) {
-    HandInstance* hand = nullptr;
-    std::string err;
-    if (!ResolveHandForCommand(request->ip, &hand, err)) {
-        response->success = false;
-        response->message = err;
-        return;
-    }
-
-    bool ok = bag_manager_->startPlayback(request->ip, request->folder_path, request->speed_ratio);
-    response->success = ok;
-    response->message =
-        ok ? "Playback started" : "Failed to start playback (check path or already playing)";
-}
-
-void RysenApexHandNode::HandleStopPlayback(
-    const std::shared_ptr<rysen_apexhand_msgs::srv::StopPlayback::Request> request,
-    std::shared_ptr<rysen_apexhand_msgs::srv::StopPlayback::Response> response) {
-    bag_manager_->stopPlayback(request->ip);
-    response->success = true;
-    response->message = "Playback stopped";
 }
 
 std::string RysenApexHandNode::ErrorCodeToString(const rysen::ErrorCode& error) {

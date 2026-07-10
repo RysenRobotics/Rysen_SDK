@@ -5,9 +5,6 @@ services:
       dockerfile: docker/Dockerfile.rysen_sdk
     image: rysen_sdk:latest
     container_name: rysen_sdk_env
-    network_mode: host
-    ipc: host
-    privileged: true
     volumes:
       - ..:/workspace
       - build_cache:/workspace/build

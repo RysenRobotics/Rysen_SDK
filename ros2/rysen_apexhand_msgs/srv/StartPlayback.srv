@@ -1,6 +1,0 @@
-string ip
-string folder_path  # 之前录制的文件夹路径
-float64 speed_ratio # 回放速度倍率，通常传 1.0
----
-bool success
-string message
