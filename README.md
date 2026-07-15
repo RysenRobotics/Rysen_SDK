@@ -64,6 +64,45 @@ This repository provides library files for Rysen ApexHand (including x86_64 and 
 └── VERSION
 ```
 
+## ⚙️ Prerequisites
+
+Before getting started, ensure your host system meets the following hardware and software requirements. Rysen Explorer is deployed via Docker — there is **no need** to install Python, a C++ toolchain, or ROS2 locally; runtime dependencies are included in the pre-built image.
+
+### Hardware
+
+| Item | Requirement |
+|------|-------------|
+| **Ethernet** | At least one available network port on the host; gigabit recommended, same subnet as the dexterous hand |
+| **Connection** | Direct Ethernet cable or low-latency switch; avoid high-latency Wi‑Fi |
+| **Device Ports** | Port 1 **5856**, Port 2 **5857** (TCP) |
+
+### Recommended Host Configuration
+
+| Item | Requirement |
+|------|-------------|
+| **CPU** | x86_64 |
+| **Memory** | ≥ 8 GB |
+| **Storage** | ≥ 16 GB free space |
+
+### Operating System & Dependencies
+
+| Item | Requirement |
+|------|-------------|
+| **Operating System** | Linux; **Ubuntu 22.04** recommended |
+| **Architecture** | x86_64 (CPU) |
+| **Docker Engine** | ≥ **20.10** |
+| **Docker Compose** | ≥ **2.0** (Compose V2 plugin; use the `docker compose` command) |
+
+### Network Connectivity
+
+Before connecting to the dexterous hand, confirm:
+
+- The host can reach the hand's IP address (`ping` succeeds)
+- Firewall allows TCP **5856** and **5857**
+- Control/data port RTT: ≤ **5 ms** on a standard kernel, ≤ **1 ms** with a real-time kernel (PREEMPT_RT)
+
+> For detailed subnet and host IP configuration steps, see **[Network Connection Configuration](#-connection-configuration)** below.
+
 ---
 
 ## 🚀 Quick Start (Recommended)

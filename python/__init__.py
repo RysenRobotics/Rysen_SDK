@@ -10,5 +10,5 @@ found in the LICENSE file.
 
 from .rysen_apexhand_sdk import *
 
-__version__ = "1.4.4"
+__version__ = "1.4.7"
 
