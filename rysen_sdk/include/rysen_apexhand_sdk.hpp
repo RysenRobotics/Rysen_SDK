@@ -319,6 +319,15 @@ class Rysen {
     ErrorCode MoveJPositionFollow(const std::vector<MoveJPositionFollowParam>& p_follow_param);
 
     /**
+     * @brief Move J Control Follow
+     *  直接跟随关节控制指令下发（无平滑滤波 / tracker）
+     * @param p_commands 关节控制参数：position(rad)、velocity(rad/s)、
+     *                   acceleration(rad/s²，协议 TgJointAcc，可作为电流替代通道)
+     * @return ErrorCode 错误码
+     */
+    ErrorCode MoveJControlFollow(const std::vector<JointControlParam>& p_commands);
+
+    /**
      * @brief 从 URDF 文件加载机器人模型（手部刚体/关节模型）。
      *
      * SDK 默认不会自动加载任何 URDF。若需要刚体/关节模型（例如用于轨迹规划、

@@ -41,6 +41,12 @@ def generate_launch_description() -> LaunchDescription:
     declare_move_j_position_follow_command_topic = DeclareLaunchArgument(
         "move_j_position_follow_command_topic",
         default_value="move_j_position_follow_command");
+    declare_move_j_control_follow_command_topic = DeclareLaunchArgument(
+        "move_j_control_follow_command_topic",
+        default_value="move_j_control_follow_command");
+    declare_per_hand_control_follow_topics_csv = DeclareLaunchArgument(
+        "per_hand_control_follow_topics_csv", default_value="",
+        description="Per-hand control-follow topics, format: ip=topic;ip=topic")
     declare_follow_control_owner_timeout_ms = DeclareLaunchArgument(
         "follow_control_owner_timeout_ms", default_value="100")
     declare_is_finger_enabled_service = DeclareLaunchArgument(
@@ -126,6 +132,10 @@ def generate_launch_description() -> LaunchDescription:
                 "hardware_errors_topic": LaunchConfiguration("hardware_errors_topic"),
                 "move_j_position_follow_command_topic":
                     LaunchConfiguration("move_j_position_follow_command_topic"),
+                "move_j_control_follow_command_topic":
+                    LaunchConfiguration("move_j_control_follow_command_topic"),
+                "per_hand_control_follow_topics_csv":
+                    LaunchConfiguration("per_hand_control_follow_topics_csv"),
                 "follow_control_owner_timeout_ms":
                     LaunchConfiguration("follow_control_owner_timeout_ms"),
                 "is_finger_enabled_service": LaunchConfiguration("is_finger_enabled_service"),
@@ -183,6 +193,8 @@ def generate_launch_description() -> LaunchDescription:
             declare_tactile_image_topic,
             declare_hardware_errors_topic,
             declare_move_j_position_follow_command_topic,
+            declare_move_j_control_follow_command_topic,
+            declare_per_hand_control_follow_topics_csv,
             declare_follow_control_owner_timeout_ms,
             declare_is_finger_enabled_service,
             declare_move_joint_service,
