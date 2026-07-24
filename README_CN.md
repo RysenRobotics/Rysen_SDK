@@ -115,7 +115,17 @@
 在执行启动脚本之前，**必须确保您的系统中已安装与您处理器架构相匹配的 Docker，并且 Docker 后台服务（Daemon）正在运行。**
 
 
-### 1. 一键启动开发环境
+### 1. 离线/弱网环境部署（网络正常可跳过）
+
+如果您的设备（如机器人内部的工控机）无法连接外网，或拉取镜像极其缓慢，请先准备对应的离线镜像包：
+
+1. 前往本仓库的 [Releases 页面](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1)下载与设备架构对应的离线镜像包：
+   * x86_64 设备（PC/服务器）：`rysen_sdk_amd64_image.tar`
+   * ARM64 设备（树莓派/Jetson 等）：`rysen_sdk_arm64_image.tar`
+2. 将下载好的 `.tar` 文件放置在仓库的**根目录**下。
+3. 继续执行下方的启动步骤，脚本会自动侦测并快速加载离线镜像包。
+
+### 2. 一键启动开发环境
 
 **🐧 Linux / macOS 用户:**
 
@@ -134,19 +144,7 @@ chmod +x ./scripts/start_env.sh
 
 ```
 
-> **📦 离线/弱网环境部署说明 (必看)**：
-> 如果您所在的设备（如机器人内部的工控机）无法连接外网，或拉取镜像极其缓慢：
-> 1. 请前往本仓库的 [Releases 页面](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1)下载对应的离线镜像包：
-> * x86_64 设备（PC/服务器）请下载：`rysen_sdk_amd64_image.tar`
-> * ARM64 设备（树莓派/Jetson等）请下载：`rysen_sdk_arm64_image.tar`
-> 
-> 
-> 2. 将下载好的 `.tar` 文件放置在仓库的**根目录**下。
-> 3. 再次运行启动脚本，脚本会自动侦测并极速加载离线包！
-> 
-> 
-
-### 2. 开始使用
+### 3. 开始使用
 
 启动成功后，脚本会自动引导您进入 `rysen_sdk_env` 容器的 `/workspace` 目录。在容器内，您可以直接运行任何 C++、Python 或 ROS2 示例，所有依赖均已就绪。
 
