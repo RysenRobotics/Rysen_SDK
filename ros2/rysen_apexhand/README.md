@@ -54,7 +54,8 @@ In Foxglove Studio, open **Open connection → Foxglove WebSocket** and fill in 
 
 | Topic | Type | Description |
 |---|---|---|
-| `rysen/apexhand/<ip_key>/move_j_position_follow_command` | `sensor_msgs/msg/JointState` | Follow control input (independent owner per hand) |
+| `rysen/apexhand/<ip_key>/move_j_position_follow_command` | `sensor_msgs/msg/JointState` | Smooth position follow (`name`+`position`) |
+| `rysen/apexhand/<ip_key>/move_j_control_follow_command` | `sensor_msgs/msg/JointState` | Direct control follow: `position` / `velocity` / `effort`(acceleration or current substitute); shares follow owner with position follow |
 
 ## Services
 
@@ -165,12 +166,14 @@ ros2 service call /rysen/apexhand/get_version_info rysen_apexhand_msgs/srv/GetVe
 | `auto_connect_startup_hands` | `true` | Whether to automatically connect hands in `startup_hand_ips_csv` |
 | `multi_hand_topic_prefix` | `rysen/apexhand` | Multi-hand state topic prefix |
 | `per_hand_topic_prefixes_csv` | `""` | Override prefix per hand, format: `ip=prefix;ip=prefix` |
-| `per_hand_follow_topics_csv` | `""` | Override follow subscription topic per hand, format: `ip=topic;ip=topic` |
+| `per_hand_follow_topics_csv` | `""` | Override position-follow subscription topic per hand, format: `ip=topic;ip=topic` |
+| `per_hand_control_follow_topics_csv` | `""` | Override control-follow subscription topic per hand, format: `ip=topic;ip=topic` |
 | `joint_states_topic` | `joint_states` | Joint state topic suffix (can be renamed via launch) |
 | `motor_states_topic` | `motor_states` | Motor state topic suffix (can be renamed via launch) |
 | `tactile_image_topic` | `hand_tactile_forces` | Tactile topic suffix (can be renamed via launch) |
 | `hardware_errors_topic` | `hardware_errors` | Hardware error topic suffix (can be renamed via launch) |
-| `move_j_position_follow_command_topic` | `move_j_position_follow_command` | Follow subscription topic suffix (can be renamed via launch) |
+| `move_j_position_follow_command_topic` | `move_j_position_follow_command` | Position-follow subscription topic suffix |
+| `move_j_control_follow_command_topic` | `move_j_control_follow_command` | Direct control-follow subscription topic suffix |
 | `joint_states_pub_freq` | `100` | Joint state publishing frequency |
 | `motor_states_pub_freq` | `100` | Motor state publishing frequency |
 | `tactile_image_pub_freq` | `100` | Tactile data publishing frequency |

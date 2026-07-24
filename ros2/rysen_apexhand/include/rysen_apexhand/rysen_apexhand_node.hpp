@@ -62,6 +62,7 @@ class RysenApexHandNode : public rclcpp::Node {
         bool connected{false};
         std::string hand_side{"unknown"};
         rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr move_j_position_follow_sub;
+        rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr move_j_control_follow_sub;
         std::mutex follow_control_owner_mutex;
         // 使用固定大小的数组直接存储底层 GID，抛弃 std::string
         std::array<uint8_t, RMW_GID_STORAGE_SIZE> follow_control_owner_gid;
@@ -146,6 +147,11 @@ class RysenApexHandNode : public rclcpp::Node {
     void OnMoveJPositionFollowCommand(HandInstance* hand,
                                       const sensor_msgs::msg::JointState::SharedPtr msg,
                                       const rclcpp::MessageInfo& message_info);
+    void OnMoveJControlFollowCommand(HandInstance* hand,
+                                     const sensor_msgs::msg::JointState::SharedPtr msg,
+                                     const rclcpp::MessageInfo& message_info);
+    /// Shared follow-topic owner lock (position follow / control follow).
+    bool TryAcquireFollowControlOwner(HandInstance* hand, const rclcpp::MessageInfo& message_info);
 
     void PublishJointStates(HandInstance* hand, const rysen::JointStates& states);
     void PublishMotorStates(HandInstance* hand, const rysen::MotorStates& states);
@@ -176,6 +182,7 @@ class RysenApexHandNode : public rclcpp::Node {
     std::unordered_map<std::string, rysen::JointId> joint_name_to_id_map_;
     std::unordered_map<std::string, std::string> per_hand_topic_prefix_overrides_;
     std::unordered_map<std::string, std::string> per_hand_follow_topic_overrides_;
+    std::unordered_map<std::string, std::string> per_hand_control_follow_topic_overrides_;
 
     std::string NormalizeIp(const std::string& ip) const;
     std::string IpToTopicKey(const std::string& ip) const;

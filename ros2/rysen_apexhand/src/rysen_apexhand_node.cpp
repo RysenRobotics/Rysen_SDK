@@ -121,6 +121,9 @@ RysenApexHandNode::RysenApexHandNode(const rclcpp::NodeOptions& options)
                                  100);  //释放控制权时间缩小为0.1s
     this->declare_parameter<std::string>("move_j_position_follow_command_topic",
                                          "move_j_position_follow_command");
+    this->declare_parameter<std::string>("move_j_control_follow_command_topic",
+                                         "move_j_control_follow_command");
+    this->declare_parameter<std::string>("per_hand_control_follow_topics_csv", "");
 
     this->declare_parameter<std::string>("remove_hand_service", "rysen/apexhand/remove_hand");
     this->declare_parameter<std::string>("move_joint_service", "rysen/apexhand/move_joint");
@@ -175,6 +178,8 @@ RysenApexHandNode::RysenApexHandNode(const rclcpp::NodeOptions& options)
         ParseIpPrefixOverrides(this->get_parameter("per_hand_topic_prefixes_csv").as_string());
     per_hand_follow_topic_overrides_ =
         ParseIpPrefixOverrides(this->get_parameter("per_hand_follow_topics_csv").as_string());
+    per_hand_control_follow_topic_overrides_ = ParseIpPrefixOverrides(
+        this->get_parameter("per_hand_control_follow_topics_csv").as_string());
 
     const auto bind2 = [this](auto fn) {
         return std::bind(fn, this, std::placeholders::_1, std::placeholders::_2);
@@ -359,6 +364,22 @@ void RysenApexHandNode::AttachHandTopics(HandInstance* hand) {
                          const rclcpp::MessageInfo& info) {
             OnMoveJPositionFollowCommand(hand_ptr, msg, info);
         });
+
+    const std::string control_follow_topic_suffix =
+        this->get_parameter("move_j_control_follow_command_topic").as_string();
+    std::string control_follow_topic = ResolveTopicName(
+        control_follow_topic_suffix, "move_j_control_follow_command", prefix, hand->topic_key);
+    const auto control_follow_it = per_hand_control_follow_topic_overrides_.find(hand->ip);
+    if (control_follow_it != per_hand_control_follow_topic_overrides_.end() &&
+        !control_follow_it->second.empty()) {
+        control_follow_topic = control_follow_it->second;
+    }
+    hand->move_j_control_follow_sub = this->create_subscription<sensor_msgs::msg::JointState>(
+        control_follow_topic, sub_qos,
+        [this, hand_ptr](const sensor_msgs::msg::JointState::SharedPtr msg,
+                         const rclcpp::MessageInfo& info) {
+            OnMoveJControlFollowCommand(hand_ptr, msg, info);
+        });
     hand->follow_control_owner_last_seen = GetSystemNow();
 }
 
@@ -367,6 +388,7 @@ void RysenApexHandNode::DetachHandTopics(HandInstance* hand) {
         return;
     }
     hand->move_j_position_follow_sub.reset();
+    hand->move_j_control_follow_sub.reset();
     hand->joint_states_pub.reset();
     hand->motor_states_pub.reset();
     hand->tactile_image_pub.reset();
@@ -930,54 +952,8 @@ void RysenApexHandNode::OnMoveJPositionFollowCommand(
         return;
     }
 
-    // 1. 获取底层 GID 和当前时间
-    const auto& gid_data = message_info.get_rmw_message_info().publisher_gid.data;
-    const rclcpp::Time now = GetSystemNow();
-    {
-        std::lock_guard<std::mutex> lock(hand->follow_control_owner_mutex);
-
-        // 判断发送者是否是当前的 owner
-        bool is_same_owner =
-            hand->has_follow_owner && (std::memcmp(hand->follow_control_owner_gid.data(), gid_data,
-                                                   RMW_GID_STORAGE_SIZE) == 0);
-
-        // 2. 超时检测
-        if (hand->has_follow_owner) {
-            const int64_t elapsed_ms =
-                (now - hand->follow_control_owner_last_seen).nanoseconds() / 1000000;
-
-            if (elapsed_ms > follow_control_owner_timeout_ms_) {
-                if (is_same_owner) {
-                    // 是原来的主人，只是迟到了！静默续期，防止日志风暴和锁翻转
-                    RCLCPP_DEBUG_THROTTLE(this->get_logger(), *this->get_clock(), 5000,
-                                          "Follow owner jitter detected for hand %s (delayed %ld "
-                                          "ms). Renewing silently.",
-                                          hand->ip.c_str(), elapsed_ms);
-                } else {
-                    // 真超时了，且来了一个新主人。正式释放控制权
-                    RCLCPP_INFO(this->get_logger(),
-                                "Follow owner timeout for hand %s, releasing owner.",
-                                hand->ip.c_str());
-                    hand->has_follow_owner = false;
-                }
-            }
-        }
-
-        // 3. 锁的分配与拦截逻辑
-        if (!hand->has_follow_owner) {
-            // 易主，或者第一次获取锁
-            std::memcpy(hand->follow_control_owner_gid.data(), gid_data, RMW_GID_STORAGE_SIZE);
-            hand->has_follow_owner = true;
-            RCLCPP_INFO(this->get_logger(), "Follow owner acquired for hand %s.", hand->ip.c_str());
-        } else if (!is_same_owner) {
-            // 锁在别人手里，直接拒绝
-            RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 2000,
-                                 "Follow ignored for hand %s: owner is another publisher",
-                                 hand->ip.c_str());
-            return;
-        }
-        // 4. 更新保活时间戳
-        hand->follow_control_owner_last_seen = now;
+    if (!TryAcquireFollowControlOwner(hand, message_info)) {
+        return;
     }
 
     if (msg->name.size() != msg->position.size()) {
@@ -1007,15 +983,120 @@ void RysenApexHandNode::OnMoveJPositionFollowCommand(
     }
 
     rysen::ErrorCode error = hand->sdk->MoveJPositionFollow(follow_params);
-    // if (error != rysen::ErrorCode::ERROR_CODE_OK) {
-    //     RCLCPP_ERROR(this->get_logger(), "MoveJPositionFollowCommand failed: %s",
-    //                  ErrorCodeToString(error).c_str());
-    // }
     if (error != rysen::ErrorCode::ERROR_CODE_OK) {
-        // 将无脑的 RCLCPP_ERROR 改为 RCLCPP_WARN_THROTTLE，限制为每 2000 毫秒（2秒）最多打印一次
         RCLCPP_WARN_THROTTLE(
             this->get_logger(), *this->get_clock(), 2000,
             "MoveJPositionFollowCommand returned warning/error: %s (values were clamped safely)",
+            ErrorCodeToString(error).c_str());
+    }
+}
+
+bool RysenApexHandNode::TryAcquireFollowControlOwner(HandInstance* hand,
+                                                     const rclcpp::MessageInfo& message_info) {
+    if (!hand) {
+        return false;
+    }
+
+    const auto& gid_data = message_info.get_rmw_message_info().publisher_gid.data;
+    const rclcpp::Time now = GetSystemNow();
+    std::lock_guard<std::mutex> lock(hand->follow_control_owner_mutex);
+
+    bool is_same_owner =
+        hand->has_follow_owner &&
+        (std::memcmp(hand->follow_control_owner_gid.data(), gid_data, RMW_GID_STORAGE_SIZE) == 0);
+
+    if (hand->has_follow_owner) {
+        const int64_t elapsed_ms =
+            (now - hand->follow_control_owner_last_seen).nanoseconds() / 1000000;
+
+        if (elapsed_ms > follow_control_owner_timeout_ms_) {
+            if (is_same_owner) {
+                RCLCPP_DEBUG_THROTTLE(this->get_logger(), *this->get_clock(), 5000,
+                                      "Follow owner jitter detected for hand %s (delayed %ld "
+                                      "ms). Renewing silently.",
+                                      hand->ip.c_str(), elapsed_ms);
+            } else {
+                RCLCPP_INFO(this->get_logger(),
+                            "Follow owner timeout for hand %s, releasing owner.", hand->ip.c_str());
+                hand->has_follow_owner = false;
+            }
+        }
+    }
+
+    if (!hand->has_follow_owner) {
+        std::memcpy(hand->follow_control_owner_gid.data(), gid_data, RMW_GID_STORAGE_SIZE);
+        hand->has_follow_owner = true;
+        RCLCPP_INFO(this->get_logger(), "Follow owner acquired for hand %s.", hand->ip.c_str());
+    } else if (!is_same_owner) {
+        RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 2000,
+                             "Follow ignored for hand %s: owner is another publisher",
+                             hand->ip.c_str());
+        return false;
+    }
+    hand->follow_control_owner_last_seen = now;
+    return true;
+}
+
+void RysenApexHandNode::OnMoveJControlFollowCommand(
+    HandInstance* hand,
+    const sensor_msgs::msg::JointState::SharedPtr msg,
+    const rclcpp::MessageInfo& message_info) {
+    if (!hand || !hand->sdk || !hand->sdk->IsConnected()) {
+        return;
+    }
+
+    if (!TryAcquireFollowControlOwner(hand, message_info)) {
+        return;
+    }
+
+    if (msg->name.size() != msg->position.size()) {
+        RCLCPP_ERROR(this->get_logger(),
+                     "MoveJControlFollowCommand: Joint names and positions size mismatch");
+        return;
+    }
+
+    const bool has_velocity = !msg->velocity.empty();
+    const bool has_effort = !msg->effort.empty();
+    if (has_velocity && msg->velocity.size() != msg->name.size()) {
+        RCLCPP_ERROR(this->get_logger(),
+                     "MoveJControlFollowCommand: Joint names and velocities size mismatch");
+        return;
+    }
+    if (has_effort && msg->effort.size() != msg->name.size()) {
+        RCLCPP_ERROR(this->get_logger(),
+                     "MoveJControlFollowCommand: Joint names and effort(acceleration) size "
+                     "mismatch");
+        return;
+    }
+
+    std::vector<rysen::JointControlParam> commands;
+    commands.reserve(msg->name.size());
+    for (size_t i = 0; i < msg->name.size(); ++i) {
+        auto it = joint_name_to_id_map_.find(msg->name[i]);
+        if (it == joint_name_to_id_map_.end()) {
+            RCLCPP_WARN(this->get_logger(), "Unknown joint name: %s, skipping",
+                        msg->name[i].c_str());
+            continue;
+        }
+        rysen::JointControlParam cmd;
+        cmd.joint_id = it->second;
+        cmd.position = msg->position[i];
+        cmd.velocity = has_velocity ? msg->velocity[i] : 0.0;
+        // effort carries acceleration / current-substitute channel (TgJointAcc)
+        cmd.acceleration = has_effort ? msg->effort[i] : 0.0;
+        commands.push_back(cmd);
+    }
+
+    if (commands.empty()) {
+        RCLCPP_WARN(this->get_logger(), "No valid joints found in MoveJControlFollowCommand");
+        return;
+    }
+
+    rysen::ErrorCode error = hand->sdk->MoveJControlFollow(commands);
+    if (error != rysen::ErrorCode::ERROR_CODE_OK) {
+        RCLCPP_WARN_THROTTLE(
+            this->get_logger(), *this->get_clock(), 2000,
+            "MoveJControlFollowCommand returned warning/error: %s (values were clamped safely)",
             ErrorCodeToString(error).c_str());
     }
 }

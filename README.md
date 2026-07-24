@@ -113,7 +113,17 @@ We highly recommend using the intelligent environment startup script we provide.
 
 Before executing the startup script, **ensure that Docker matching your processor architecture is installed in your system and the Docker background service (Daemon) is running.**
 
-### 1. One-click Launch of Development Environment
+### 1. Offline/Low-Bandwidth Deployment (Skip If Your Network Is Stable)
+
+If your device (such as an industrial computer inside a robot) cannot access the internet, or pulling the image is extremely slow, prepare the appropriate offline image package first:
+
+1. Go to this repository's [Releases page](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1) and download the offline image package for your device architecture:
+   * x86_64 devices (PC/server): `rysen_sdk_amd64_image.tar`
+   * ARM64 devices (Raspberry Pi/Jetson, etc.): `rysen_sdk_arm64_image.tar`
+2. Place the downloaded `.tar` file in the **root directory** of the repository.
+3. Continue with the startup steps below. The script will automatically detect and quickly load the offline image package.
+
+### 2. One-click Launch of Development Environment
 
 **🐧 Linux / macOS Users:**
 
@@ -130,16 +140,7 @@ Please go to the Docker Desktop official website to download and install the Doc
 ./scripts/start_env.bat
 ```
 
-> **📦 Offline/Low-Network Environment Deployment Instructions (Must Read)**:
-> If the device you are using (such as the industrial computer inside the robot) cannot connect to the external network, or pulling the image is extremely slow:
-> 1. Please go to the [Releases page](https://github.com/RysenRobotics/Rysen_SDK/releases/tag/v1.3.1) of this repository to download the corresponding offline image package:
-> * For x86_64 devices (PC/Server): download `rysen_sdk_amd64_image.tar`
-> * For ARM64 devices (Raspberry Pi/Jetson, etc.): download `rysen_sdk_arm64_image.tar`
-> 
-> 2. Place the downloaded `.tar` file in the **root directory** of the repository.
-> 3. Run the startup script again, and the script will automatically detect and load the offline package at high speed!
-
-### 2. Get Started
+### 3. Get Started
 
 After successful startup, the script will automatically guide you to the `/workspace` directory of the `rysen_sdk_env` container. Inside the container, you can directly run any C++, Python, or ROS2 examples, and all dependencies are ready.
 

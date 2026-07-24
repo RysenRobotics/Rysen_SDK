@@ -319,7 +319,8 @@ if JointControlParam is not None:
         joint_id (JointId): Joint identifier
         position (float): Target joint position (rad)
         velocity (float): Target joint velocity (rad/s)
-        acceleration (float): Target joint acceleration (rad/s²)
+        acceleration (float): Target joint acceleration (rad/s²);
+            protocol TgJointAcc, can be used as current substitute channel
     """)
 
 if MoveJPositionFollowParam is not None:
@@ -813,6 +814,26 @@ class Rysen:
         if not all(isinstance(p, MoveJPositionFollowParam) for p in params):
             return ErrorCode.ERROR_CODE_INVALID_ARGUMENT
         return self._sdk.move_j_position_follow(params)
+
+    def move_j_control_follow(self, commands: List[JointControlParam]) -> ErrorCode:
+        """
+        Direct joint control follow (no smoothing / tracker).
+
+        直接跟随控制：将 position / velocity / acceleration 原样下发。
+        acceleration 对应协议 TgJointAcc，可作为电流替代通道。
+
+        Args:
+            commands: List of JointControlParam (position rad, velocity rad/s,
+                      acceleration rad/s² or current substitute)
+
+        Returns:
+            ErrorCode: ERROR_CODE_OK if successful
+        """
+        if not isinstance(commands, (list, tuple)):
+            return ErrorCode.ERROR_CODE_INVALID_ARGUMENT
+        if not all(isinstance(cmd, JointControlParam) for cmd in commands):
+            return ErrorCode.ERROR_CODE_INVALID_ARGUMENT
+        return self._sdk.move_j_control_follow(commands)
 
     def start_tactile_calibration(self) -> ErrorCode:
         """
