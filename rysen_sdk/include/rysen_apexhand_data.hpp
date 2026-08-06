@@ -188,11 +188,11 @@ struct TangentialForce {
     double magnitude = 0.0;  // 切向力大小
 };
 
-// 二维力图像 切向力
+// 二维力图像
 struct TactileImage {
     uint32_t width = 0;
     uint32_t height = 0;
-    std::vector<uint16_t> gray_image;   // 灰度图像数据
+    std::vector<uint32_t> gray_image;   // 法向力，单位 Pa
     TangentialForce tangential_forces;  // 切向力数据
 };
 

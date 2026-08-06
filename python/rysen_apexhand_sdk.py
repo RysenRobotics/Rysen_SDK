@@ -390,7 +390,7 @@ if _TactileImage is not None:
     Attributes:
         width (int): Image width in pixels
         height (int): Image height in pixels
-        gray_image (List[int]): Grayscale image data
+        gray_image (List[int]): Normal-force image in Pa
         tangential_forces (TangentialForce): Tangential force data
     """)
 
