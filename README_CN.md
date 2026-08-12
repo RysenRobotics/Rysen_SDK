@@ -65,6 +65,9 @@
 │   ├── Dockerfile.rysen_sdk
 │   ├── Dockerfile.rysen_sdk.arm64
 │   └── README.md
+├── docs
+│   ├── apexhand_1.0_tactile_array.md
+│   └── apexhand_1.0_tactile_array_en.md
 ├── install_rysen_deps.sh
 ├── LICENSE
 ├── python
@@ -296,6 +299,7 @@ ros2 run rysen_apexhand rysen_apexhand_ros_example_node_exe --ip 192.168.0.103
 
 ## 📚 更多信息
 
+* **ApexHand 1.0 触觉阵列说明**: Taxel 布局、有效索引及左右手掌心映射请参考 [docs/apexhand_1.0_tactile_array.md](docs/apexhand_1.0_tactile_array.md)
 * **C++ API 文档**: 参考 [cpp/README.md](cpp/README.md) 和 `cpp/rysen_example.cpp` 中的注释
 * **Python API 文档**: 参考 [python/README.md](python/README.md)
 * **ROS2 API 文档**: 参考 [ros2/rysen_apexhand/README.md](ros2/rysen_apexhand/README.md)

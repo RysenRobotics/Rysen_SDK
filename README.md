@@ -26,6 +26,9 @@ This repository provides library files for Rysen ApexHand (including x86_64 and 
 │   ├── Dockerfile.rysen_sdk
 │   ├── Dockerfile.rysen_sdk.arm64
 │   └── README.md
+├── docs
+│   ├── apexhand_1.0_tactile_array.md
+│   └── apexhand_1.0_tactile_array_en.md
 ├── install_rysen_deps.sh
 ├── LICENSE
 ├── python
@@ -286,6 +289,7 @@ When building C++ or ROS 2 projects, the CMake script will automatically identif
 
 ## 📚 More Information
 
+* **ApexHand 1.0 Tactile Array Mapping**: Refer to [docs/apexhand_1.0_tactile_array_en.md](docs/apexhand_1.0_tactile_array_en.md) for Taxel layouts, valid indices, and left/right palm mappings
 * **C++ API Documentation**: Refer to the comments in [cpp/README.md](cpp/README.md) and `cpp/rysen_example.cpp`
 * **Python API Documentation**: Refer to [python/README.md](python/README.md)
 * **ROS2 API Documentation**: Refer to [ros2/rysen_apexhand/README.md](ros2/rysen_apexhand/README.md)
